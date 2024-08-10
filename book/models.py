@@ -18,7 +18,7 @@ class Book(models.Model):
     )
     daily_fee = models.DecimalField(
         max_digits=3, decimal_places=2, validators=[MinValueValidator(0.09)]
-    )  # MinValueValidator = 0.09 because 0.1 does not allow to set value to 0.1
+    )  # MinValueValidator = 0.09 because 0.1 does not allow to set as 0.1
 
     def __str__(self):
         return f'"{self.title}", by {self.author}'
