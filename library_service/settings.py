@@ -29,7 +29,8 @@ INSTALLED_APPS = [
     "book",
     "borrowing",
     "payment",
-    "user"
+    "user",
+    "notification"
 ]
 
 INTERNAL_IPS = [
@@ -86,19 +87,20 @@ WSGI_APPLICATION = "library_service.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.postgresql",
+        "NAME": os.environ.get("POSTGRES_DB"),
+        "USER": os.environ.get("POSTGRES_USER"),
+        "PASSWORD": os.environ.get("POSTGRES_PASSWORD"),
+        "HOST": os.environ.get("POSTGRES_HOST"),
+        "PORT": os.environ.get("POSTGRES_PORT"),
     }
 }
 
 # DATABASES = {
-#     "default": dj_database_url.config(
-#         default=f"postgresql://{os.environ.get('POSTGRES_USER')}:"
-#                 f"{os.environ.get('POSTGRES_PASSWORD')}@"
-#                 f"{os.environ.get('POSTGRES_HOST')}:"
-#                 f"{os.environ.get('POSTGRES_PORT')}/"
-#                 f"{os.environ.get('POSTGRES_DB')}"
-#     )
+#     "default": {
+#         "ENGINE": "django.db.backends.sqlite3",
+#         "NAME": BASE_DIR / "db.sqlite3",
+#     }
 # }
 
 AUTH_PASSWORD_VALIDATORS = [

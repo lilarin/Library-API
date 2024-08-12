@@ -13,7 +13,9 @@ User = get_user_model()
 class BorrowingModelTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(
-            username="testuser", email="testuser@example.com", password="password123"
+            username="testuser",
+            email="testuser@example.com",
+            password="password123"
         )
         self.book = Book.objects.create(
             title="Test Book",
@@ -66,8 +68,10 @@ class BorrowingModelTest(TestCase):
             book=self.book,
             user=self.user,
         )
-
-        expected_str = (f"Book: {self.book.title}, "
-                        f"Borrowed by: {self.user.email}, "
-                        f"Date: {borrowing.borrow_date}")
+        expected_str = (
+            f"Book: {self.book}\n"
+            f"Borrowed by: {self.user.email}\n"
+            f"Borrow date: {borrowing.borrow_date}\n"
+            f"Expected return date: {borrowing.expected_return_date}"
+        )
         self.assertEqual(str(borrowing), expected_str)
