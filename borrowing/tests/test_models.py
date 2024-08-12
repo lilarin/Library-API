@@ -67,5 +67,7 @@ class BorrowingModelTest(TestCase):
             user=self.user,
         )
 
-        expected_str = f"Book: {self.book.title}, Borrowed by: {self.user.email}, Date: {borrowing.borrow_date}"
+        expected_str = (f"Book: {self.book.title}, "
+                        f"Borrowed by: {self.user.email}, "
+                        f"Date: {borrowing.borrow_date}")
         self.assertEqual(str(borrowing), expected_str)
