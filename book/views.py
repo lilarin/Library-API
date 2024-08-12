@@ -10,8 +10,7 @@ class BookViewSet(viewsets.ModelViewSet):
     queryset = Book.objects.all()
     serializer_class = BookSerializer
 
-    @action(detail=True, methods=['get'], url_path='detail')
-    def detail(self, request, pk=None):
+    def retrieve(self, request, *args, **kwargs):
         book = self.get_object()
         data = {
             "title": book.title,
