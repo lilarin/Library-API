@@ -32,7 +32,9 @@ class Borrowing(models.Model):
         super().save(*args, **kwargs)
 
     def __str__(self):
-        return f"Book: {self.book.title}, Borrowed by: {self.user.email}, Date: {self.borrow_date}"
+        return (f"Book: {self.book.title}, "
+                f"Borrowed by: {self.user.email}, "
+                f"Date: {self.borrow_date}")
 
     class Meta:
         ordering = ["expected_return_date"]
