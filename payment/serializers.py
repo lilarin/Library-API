@@ -89,6 +89,8 @@ class PaymentUserListSerializer(PaymentSerializer):
     borrowing = BorrowingListReadSerializer()
 
 
+# TODO need to speak about detail page for payment
+
 # waiting for borrowing serializers
 # class PaymentDetailSerializer(serializers.ModelSerializer):
 #     class Meta:

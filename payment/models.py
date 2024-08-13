@@ -77,10 +77,18 @@ class Payment(models.Model):
     )
 
     def __str__(self):
-        return f"{self.status} - {self.money_to_pay} - {self.payment_type}"
+        return (
+            f"Status: {self.status}"
+            f"Type: {self.payment_type}"
+            f"Status: {self.status}"
+            f"Money to pay - {self.money_to_pay}"
+        )
 
     class Meta:
         ordering = ["-status"]
+
+    def change_status_and_delete(self, status):
+        ...
 
     def change_type(self):
         if self.borrowing.actual_return_date:
