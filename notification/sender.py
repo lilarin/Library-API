@@ -11,7 +11,7 @@ def send_message(message):
     if token and chat_id:
         try:
             requests.post(
-                url=f"https://api.telegram.org/bot{token}/sendMessage",  # noqa: E231
+                url=f"https://api.telegram.org/bot{token}/sendMessage",  # noqa: E231, E501
                 data={
                     "chat_id": chat_id,
                     "text": message
