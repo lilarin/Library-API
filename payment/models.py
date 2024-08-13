@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from django.utils import timezone
+
 from borrowing.models import Borrowing
 
 
@@ -43,12 +45,12 @@ class Payment(models.Model):
     """
 
     class Status(models.TextChoices):
-        PENDING = "PENDING", "Waiting for Payment"
-        PAID = "PAID", "Successfully paid"
+        PENDING = "PENDING", "Pending"
+        PAID = "PAID", "Paid"
 
     class Type(models.TextChoices):
-        PAYMENT = "PAYMENT_FOR_BOOK", "Payment for book"
-        FINE = "FINE_FOR_DELAY", "Fine for delay"
+        PAYMENT = "PAYMENT", "Payment"
+        FINE = "FINE", "Fine"
 
     status = models.CharField(
         max_length=24,
@@ -67,7 +69,6 @@ class Payment(models.Model):
     )
     session_url = models.URLField()
     session_id = models.UUIDField(
-        primary_key=True,
         default=uuid.uuid4,
         editable=False,
     )
@@ -80,6 +81,18 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ["-status"]
+
+    def change_type(self):
+        if self.borrowing.actual_return_date:
+            if self.borrowing.actual_return_date > self.borrowing.expected_return_date:
+                self.payment_type = self.Type.FINE
+            else:
+                self.payment_type = self.Type.PAYMENT
+        else:
+            if timezone.now() > self.borrowing.expected_return_date:
+                self.payment_type = self.Type.FINE
+            else:
+                self.payment_type = self.Type.PAYMENT
 
     @staticmethod
     def validate_positive_money_to_pay(money_to_pay, error_to_raise):
