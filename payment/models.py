@@ -4,30 +4,39 @@ from borrowing.models import Borrowing
 
 class Payment(models.Model):
     """
-    The Payment model represents a payment transaction in the library system. This model is used to track payments
+    The Payment model represents a payment transaction in the library system.
+     This model is used to track payments
     made by users for borrowing books or paying fines for late returns.
 
     Fields:
     - status: Represents the current status of the payment.
       There are two choices:
-        - Pending: Indicates that the payment has been initiated but not yet completed.
+        - Pending: Indicates that the payment
+         has been initiated but not yet completed.
+
         - Paid: Indicates that the payment has been successfully completed.
 
     - type: Specifies the type of payment being made.
       There are two choices:
         - Payment: Indicates that the payment is for renting a book.
-        - Fine: Indicates that the payment is a fine for returning a book after the "Actual return date".
+        - Fine: Indicates that the payment is a fine for
+         returning a book after the "Actual return date".
 
-    - borrowing: A ForeignKey linking this payment to a specific borrowing record in the system.
+    - borrowing: A ForeignKey linking this
+      payment to a specific borrowing record in the system.
       This connects the payment to the corresponding book rental.
 
-    - session_url: The URL where the payment will be processed. This is typically a link to the payment page
+    - session_url: The URL where the payment will be processed.
+      This is typically a link to the payment page
       provided by the payment processor (Stripe).
 
-    - session_id: A unique identifier for the payment session. It is generated when the user initiates the payment process.
-      This ID is crucial for tracking and managing the payment status through the payment provider.
+    - session_id: A unique identifier for the payment session.
+      It is generated when the user initiates the payment process.
+      This ID is crucial for tracking
+       and managing the payment status through the payment provider.
 
-    - money_to_pay: The total amount that needs to be paid, expressed in USD. This amount is calculated based on
+    - money_to_pay: The total amount that needs to be paid, expressed in USD.
+      This amount is calculated based on
       the rental fee for the book or the fine for a late return.
     """
 
@@ -44,7 +53,7 @@ class Payment(models.Model):
         choices=Status.choices,
         default=Status.PENDING,
     )
-    type = models.CharField(
+    payment_type = models.CharField(
         max_length=24,
         choices=Type.choices,
         default=Type.PAYMENT,
@@ -60,5 +69,3 @@ class Payment(models.Model):
     money_to_pay = models.DecimalField(
         max_digits=12, decimal_places=2
     )
-
-
