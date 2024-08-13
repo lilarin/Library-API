@@ -85,3 +85,33 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "user": {"read_only": True}
         }
+
+
+class BorrowingReturnSerializer(serializers.ModelSerializer):
+    def validate(self, attrs):
+        if self.instance.actual_return_date:
+            raise serializers.ValidationError(
+                {
+                    "non_field_errors": "This borrowing has already returned."
+                }
+            )
+        return attrs
+
+    def update(self, instance, validated_data):
+        instance.actual_return_date = validated_data.get(
+            "actual_return_date", None
+        )
+
+        book = instance.book
+        book.inventory += 1
+        book.save()
+
+        instance.save()
+        return instance
+
+    class Meta:
+        model = Borrowing
+        fields = ["id", "actual_return_date"]
+        extra_kwargs = {
+            "actual_return_date": {"required": True}
+        }

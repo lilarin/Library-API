@@ -137,3 +137,44 @@ class BorrowingCreateViewTest(APITestCase):
         response = self.client.post(self.url, data, format="json")
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         self.assertEqual(Borrowing.objects.count(), 0)
+
+
+class BorrowingReturnTests(APITestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(email="user@example.com", password="password123")
+        self.book = Book.objects.create(
+            title="Test Book",
+            author="Author",
+            inventory=10,
+            daily_fee=1.50
+        )
+        self.borrowing = Borrowing.objects.create(
+            borrow_date="2024-08-01",
+            expected_return_date="2024-08-10",
+            book=self.book,
+            user=self.user
+        )
+        self.url = f"/api/borrowing/borrowings/{self.borrowing.id}/return/"
+        self.client.force_authenticate(user=self.user)
+
+    def test_successful_return(self):
+        response = self.client.patch(self.url, {"actual_return_date": "2024-08-11"}, format="json")
+        self.borrowing.refresh_from_db()
+        self.book.refresh_from_db()
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(self.borrowing.actual_return_date.strftime('%Y-%m-%d'), "2024-08-11")
+        self.assertEqual(self.book.inventory, 11)
+
+    def test_return_already_returned_book(self):
+        self.borrowing.actual_return_date = "2024-08-11"
+        self.borrowing.save()
+
+        response = self.client.patch(self.url, {"actual_return_date": "2024-08-12"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertIn("non_field_errors", response.data)
+
+    def test_return_without_authentication(self):
+        self.client.force_authenticate(user=None)
+        response = self.client.patch(self.url, {"actual_return_date": "2024-08-11"}, format="json")
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
