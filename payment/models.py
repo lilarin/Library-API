@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from borrowing.models import Borrowing
 
@@ -58,14 +60,85 @@ class Payment(models.Model):
         choices=Type.choices,
         default=Type.PAYMENT,
     )
-    borrowing = models.ForeignKey(
-        Borrowing, on_delete=models.CASCADE
+    borrowing = models.OneToOneField(
+        Borrowing,
+        on_delete=models.CASCADE,
+        related_name="payment",
     )
     session_url = models.URLField()
-    session_id = models.CharField(
-        max_length=255,
-        unique=True,
+    session_id = models.UUIDField(
+        primary_key=True,
+        default=uuid.uuid4,
+        editable=False,
     )
     money_to_pay = models.DecimalField(
         max_digits=12, decimal_places=2
     )
+
+    def __str__(self):
+        return f"{self.status} - {self.money_to_pay} - {self.payment_type}"
+
+    class Meta:
+        ordering = ["-status"]
+
+    @staticmethod
+    def validate_positive_money_to_pay(money_to_pay, error_to_raise):
+        if money_to_pay < 1:
+            raise error_to_raise(
+                {
+                    "money_to_pay": "money_to_pay cannot be less than 1",
+                }
+            )
+
+    @staticmethod
+    def validate_paid_status(status, session_id, session_url, error_to_raise):
+        if status == Payment.Status.PAID:
+            if not session_id:
+                error_to_raise(
+                    {
+                        "session_id": "Paid status need a valid session id",
+                    }
+                )
+            if not session_url:
+                raise error_to_raise(
+                    {
+                        "session_url": "session_url cannot be empty",
+                    }
+                )
+
+    @staticmethod
+    def validate_type_payment_status(borrowing, payment_type, error_to_raise):
+        if (payment_type == Payment.Type.PAYMENT
+                and borrowing.actual_return_date):
+            raise error_to_raise(
+                {
+                    "payment_type": "Cannot pay for returned book",
+                }
+            )
+
+    @staticmethod
+    def validate_borrowing_exists(borrowing, error_to_raise):
+        if not borrowing:
+            raise error_to_raise(
+                {
+                    "borrowing": "Payment must be with a borrowing record",
+                }
+            )
+
+    def clean(self):
+        self.validate_positive_money_to_pay(
+            self.money_to_pay, ValueError
+        )
+        self.validate_paid_status(
+            self.status, self.session_id, self.session_url, ValueError
+        )
+        self.validate_type_payment_status(
+            self.borrowing, self.payment_type, ValueError
+        )
+        self.validate_borrowing_exists(
+            self.borrowing, ValueError
+        )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
