@@ -31,7 +31,7 @@ INSTALLED_APPS = [
     "payment",
     "user",
     "notification",
-    'rest_framework_simplejwt',
+    "rest_framework_simplejwt",
 ]
 
 INTERNAL_IPS = [
