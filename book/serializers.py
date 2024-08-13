@@ -20,7 +20,9 @@ class BookSerializer(serializers.ModelSerializer):
             )
 
         if title is None:
-            raise serializers.ValidationError({"title": "Title cannot be empty."})
+            raise serializers.ValidationError(
+                {"title": "Title cannot be empty."}
+            )
 
         return attrs
 
