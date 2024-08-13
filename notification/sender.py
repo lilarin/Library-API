@@ -15,10 +15,10 @@ def send_message(message):
                 data={
                     "chat_id": chat_id,
                     "text": message
-                }
+                }  # noqa: E231
             )
         except requests.exceptions.RequestException as error:
             print(
-                f"An error occurred while sending "
+                "An error occurred while sending "
                 f"message to the Telegram API: {error}"
             )
