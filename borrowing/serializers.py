@@ -85,7 +85,6 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "user",
         )
         extra_kwargs = {
-            "actual_return_date": {"read_only": True},
             "user": {"read_only": True},
         }
 
