@@ -45,7 +45,12 @@ class BorrowingViewSet(
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 
-    @action(detail=True, methods=["patch"], url_path="return", permission_classes=[IsAuthenticated])
+    @action(
+        detail=True,
+        methods=["patch"],
+        url_path="return",
+        permission_classes=[IsAuthenticated]
+    )
     def return_borrowing(self, request, pk=None):
         borrowing = self.get_object()
         serializer = BorrowingReturnSerializer(

@@ -91,12 +91,16 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         if self.instance.actual_return_date:
             raise serializers.ValidationError(
-                {"non_field_errors": "This borrowing has already been returned."}
+                {
+                    "non_field_errors": "This borrowing has already returned."
+                }
             )
         return attrs
 
     def update(self, instance, validated_data):
-        instance.actual_return_date = validated_data.get("actual_return_date", None)
+        instance.actual_return_date = validated_data.get(
+            "actual_return_date", None
+        )
 
         book = instance.book
         book.inventory += 1
