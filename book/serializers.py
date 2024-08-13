@@ -9,16 +9,28 @@ class BookSerializer(serializers.ModelSerializer):
         title = attrs.get("title")
 
         if inventory is not None and inventory < 1:
-            raise serializers.ValidationError({"inventory": "Inventory must be at least 1."})
+            raise serializers.ValidationError(
+                {"inventory": "Inventory must be at least 1."}
+            )
 
         if daily_fee is not None and daily_fee < 0.09:
-            raise serializers.ValidationError({"daily_fee": "Daily fee must be at least 0.09."})
+            raise serializers.ValidationError(
+                {"daily_fee": "Daily fee must be at least 0.09."}
+            )
 
         if title is None:
-            raise serializers.ValidationError({"title": "Title cannot be empty."})
+            raise serializers.ValidationError(
+                {"title": "Title cannot be empty."}
+            )
 
         return attrs
 
     class Meta:
         model = Book
-        fields = ("title", "author", "cover", "inventory", "daily_fee")
+        fields = (
+            "title",
+            "author",
+            "cover",
+            "inventory",
+            "daily_fee"
+        )
