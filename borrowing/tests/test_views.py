@@ -154,7 +154,7 @@ class BorrowingReturnTests(APITestCase):
             book=self.book,
             user=self.user
         )
-        self.url = f"/api/borrowing/borrowings/{self.borrowing.id}/return/"
+        self.url = f"/api/borrowing/{self.borrowing.id}/return/"
         self.client.force_authenticate(user=self.user)
 
     def test_successful_return(self):
