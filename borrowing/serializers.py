@@ -19,14 +19,18 @@ class BorrowingSerializer(serializers.ModelSerializer):
         ):
             raise serializers.ValidationError(
                 {
-                    "expected_return_date": "Expected return date"
-                    " cannot be earlier than borrow date."
+                    "expected_return_date": "Expected return date "
+                    "cannot be earlier than borrow date."
                 }
             )
 
         return attrs
 
     def create(self, validated_data):
+        request = self.context.get("request", None)
+        if request and hasattr(request, "user"):
+            validated_data["user"] = request.user
+
         book = validated_data["book"]
         book.inventory -= 1
         book.save()

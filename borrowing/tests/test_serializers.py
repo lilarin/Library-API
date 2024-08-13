@@ -18,16 +18,19 @@ class BorrowingSerializerTest(TestCase):
             daily_fee=1.99,
         )
 
+    def _request_mock(self, user):
+        request = type("Request", (object,), {"user": user})
+        return request
+
     def test_borrowing_serializer_valid_data(self):
         data = {
             "borrow_date": "2024-08-01",
             "expected_return_date": "2024-08-10",
             "actual_return_date": None,
             "book": self.book.id,
-            "user": self.user.id,
         }
-        serializer = BorrowingSerializer(data=data)
-        self.assertTrue(serializer.is_valid())
+        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
+        self.assertTrue(serializer.is_valid(), serializer.errors)
         borrowing = serializer.save()
         self.assertEqual(borrowing.book, self.book)
         self.assertEqual(borrowing.user, self.user)
@@ -42,9 +45,8 @@ class BorrowingSerializerTest(TestCase):
             "expected_return_date": "2024-08-10",
             "actual_return_date": None,
             "book": self.book.id,
-            "user": self.user.id,
         }
-        serializer = BorrowingSerializer(data=data)
+        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
 
         with self.assertRaises(ValidationError) as context:
             serializer.is_valid(raise_exception=True)
@@ -57,9 +59,8 @@ class BorrowingSerializerTest(TestCase):
             "expected_return_date": "2024-08-10",
             "actual_return_date": None,
             "book": self.book.id,
-            "user": self.user.id,
         }
-        serializer = BorrowingSerializer(data=data)
+        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
         self.assertTrue(serializer.is_valid(), serializer.errors)
         borrowing = serializer.save()
         self.assertEqual(Borrowing.objects.count(), 1)
@@ -73,8 +74,7 @@ class BorrowingSerializerTest(TestCase):
             "expected_return_date": "2024-07-01",
             "actual_return_date": None,
             "book": self.book.id,
-            "user": self.user.id,
         }
-        serializer = BorrowingSerializer(data=data)
+        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
         self.assertFalse(serializer.is_valid())
         self.assertIn("expected_return_date", serializer.errors)
