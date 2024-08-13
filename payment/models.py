@@ -102,7 +102,9 @@ class Payment(models.Model):
     #  for that is type is FINE, you need to pay more money for book
     def change_type(self):
         if self.borrowing.actual_return_date:
-            if self.borrowing.actual_return_date > self.borrowing.expected_return_date:
+            if (self.borrowing.actual_return_date > self.borrowing
+                    .expected_return_date):
+
                 self.payment_type = self.Type.FINE
                 print("Payment type set to FINE")
             else:
@@ -148,7 +150,9 @@ class Payment(models.Model):
     #  2) create payment with type FINE (method change_type)
 
     # @staticmethod
-    # def validate_type_payment_status(borrowing, payment_type, error_to_raise):
+    # def validate_type_payment_status(
+    # borrowing, payment_type, error_to_raise
+    # ):
     #     if (payment_type == Payment.Type.PAYMENT
     #             and borrowing.actual_return_date):
     #         raise error_to_raise(
