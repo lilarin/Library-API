@@ -11,9 +11,7 @@ def send_message(message):
     if token and chat_id:
         try:
             requests.post(
-                url="https://api.telegram.org/bot{0}/{1}".format(
-                    token, "sendMessage"
-                ),
+                url=f"https://api.telegram.org/bot{token}/sendMessage",
                 data={"chat_id": chat_id, "text": message}
             )
         except requests.exceptions.RequestException as error:
