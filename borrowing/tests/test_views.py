@@ -99,7 +99,7 @@ class BorrowingCreateViewTest(APITestCase):
             inventory=5,
             daily_fee=1.99,
         )
-        self.url = reverse("borrowing:borrowing-create")
+        self.url = reverse("borrowing:borrowing-list")
 
         refresh = RefreshToken.for_user(self.user)
         self.access_token = str(refresh.access_token)
