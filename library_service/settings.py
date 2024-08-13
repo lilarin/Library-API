@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     "borrowing",
     "payment",
     "user",
-    "notification"
+    "notification",
 ]
 
 INTERNAL_IPS = [
