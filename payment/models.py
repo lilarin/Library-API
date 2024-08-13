@@ -138,3 +138,7 @@ class Payment(models.Model):
         self.validate_borrowing_exists(
             self.borrowing, ValueError
         )
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        super().save(*args, **kwargs)
