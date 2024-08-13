@@ -1,11 +1,13 @@
 from django_filters.rest_framework.backends import DjangoFilterBackend
 from rest_framework import permissions, generics
+from rest_framework.permissions import IsAuthenticated
 
 from borrowing.filters import BorrowingFilter
 from borrowing.models import Borrowing
 from borrowing.serializers import (
     BorrowingListReadSerializer,
     BorrowingRetrieveReadSerializer,
+    BorrowingCreateSerializer
 )
 
 
@@ -28,3 +30,12 @@ class BorrowingListView(BaseBorrowingView, generics.ListAPIView):
 
 class BorrowingDetailView(BaseBorrowingView, generics.RetrieveAPIView):
     serializer_class = BorrowingRetrieveReadSerializer
+
+
+class BorrowingCreateView(generics.CreateAPIView):
+    queryset = Borrowing.objects.all()
+    serializer_class = BorrowingCreateSerializer
+    permission_classes = [IsAuthenticated]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)

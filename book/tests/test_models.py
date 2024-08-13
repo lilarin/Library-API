@@ -22,7 +22,7 @@ class BookModelTest(TestCase):
             book = Book.objects.create(
                 title="Invalid Book",
                 author="Invalid Author",
-                cover="WRONG",
+                cover="WRON",
                 inventory=1,
                 daily_fee=1.00
             )
