@@ -1,22 +1,39 @@
+from book.serializers import BookSerializer
 from rest_framework import serializers
+
 from borrowing.models import Borrowing
+from user.serializers import UserSerializer
 
 
-class BorrowingSerializer(serializers.ModelSerializer):
-    book_title = serializers.CharField(source="book.title", read_only=True)
-    user_email = serializers.EmailField(source="user.email", read_only=True)
+class BorrowingListReadSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
 
     class Meta:
         model = Borrowing
-        fields = (
+        fields = [
             "id",
             "borrow_date",
             "expected_return_date",
             "actual_return_date",
-            "book_title",
-            "user_email",
-        )
-        read_only_fields = ("book_title", "user_email")
+            "book",
+            "user",
+        ]
+
+
+class BorrowingRetrieveReadSerializer(serializers.ModelSerializer):
+    book = BookSerializer()
+    user = UserSerializer()
+
+    class Meta:
+        model = Borrowing
+        fields = [
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book",
+            "user",
+        ]
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
