@@ -40,10 +40,7 @@ INTERNAL_IPS = [
 
 REST_FRAMEWORK = {
     "DEFAULT_FILTER_BACKENDS": ["django_filters.rest_framework.DjangoFilterBackend"],
-    # "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.AllowAny"],
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
-    ],
+    "DEFAULT_PERMISSION_CLASSES": ["rest_framework.permissions.IsAuthenticated"],
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_AUTHENTICATION_CLASSES": [
         "rest_framework_simplejwt.authentication.JWTAuthentication"
@@ -126,6 +123,14 @@ AUTH_PASSWORD_VALIDATORS = [
         "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
     },
 ]
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL")
+CELERY_BEAT_SCHEDULE = {
+    "send-active-borrowings-notification-every-day": {
+        "task": "notification.tasks.send_active_borrowings_to_chat",
+        "schedule": timedelta(days=1),
+    },
+}
 
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
