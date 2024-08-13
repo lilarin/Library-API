@@ -6,7 +6,8 @@ from rest_framework.permissions import (
 
 class IsAdminOrReadOnly(BasePermission):
     """
-    Custom permission to allow only admin users to create, update, or delete books.
+    Custom permission to allow only admin users
+    to create, update, or delete books.
     All users (even those not authenticated) can list books.
     """
     def has_permission(self, request, view):
