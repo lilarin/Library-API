@@ -75,6 +75,9 @@ class Payment(models.Model):
         max_digits=12, decimal_places=2
     )
 
+    def __str__(self):
+        return f"{self.status} - {self.money_to_pay:.2f} - {self.payment_type}"
+
     class Meta:
         ordering = ["-status"]
 
