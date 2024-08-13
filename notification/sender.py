@@ -1,5 +1,4 @@
 import os
-from django.contrib.sites import requests
 from dotenv import load_dotenv
 import requests
 
@@ -12,8 +11,13 @@ def send_message(message):
     if token and chat_id:
         try:
             requests.post(
-                url="https://api.telegram.org/bot{0}/{1}".format(token, "sendMessage"),
-                data={'chat_id': chat_id, 'text': message}
+                url="https://api.telegram.org/bot{0}/{1}".format(
+                    token, "sendMessage"
+                ),
+                data={"chat_id": chat_id, "text": message}
             )
         except requests.exceptions.RequestException as error:
-            print(f"An error occurred while sending message to TelegramAPI: {error}")
+            print(
+                f"An error occurred while sending"
+                f"message to the TelegramAPI: {error}"
+            )

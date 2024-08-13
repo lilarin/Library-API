@@ -7,5 +7,5 @@ from borrowing.models import Borrowing
 @receiver(post_save, sender=Borrowing)
 def after_saving_borrowing(sender, instance, created, **kwargs):
     if created:
-        message = f"New Borrowing:\n{instance}"
+        message = f"New Borrowing: \n{instance}"
         send_message(message)
