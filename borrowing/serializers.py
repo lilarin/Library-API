@@ -53,8 +53,10 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         ):
             raise serializers.ValidationError(
                 {
-                    "expected_return_date": "Expected return date "
-                    "cannot be earlier than borrow date."
+                    "expected_return_date": (
+                        "Expected return date cannot "
+                        "be earlier than borrow date."
+                    )
                 }
             )
 
@@ -83,7 +85,8 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "user",
         )
         extra_kwargs = {
-            "user": {"read_only": True}
+            "actual_return_date": {"read_only": True},
+            "user": {"read_only": True},
         }
 
 
@@ -111,7 +114,10 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Borrowing
-        fields = ["id", "actual_return_date"]
+        fields = (
+            "id",
+            "actual_return_date"
+        )
         extra_kwargs = {
             "actual_return_date": {"required": True}
         }

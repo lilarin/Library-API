@@ -24,7 +24,6 @@ class BorrowingViewSet(
     RetrieveModelMixin,
     CreateModelMixin
 ):
-    permission_classes = [IsAuthenticated]
     filterset_class = BorrowingFilter
     queryset = Borrowing.objects.all()
 
@@ -32,8 +31,9 @@ class BorrowingViewSet(
         user = self.request.user
         if user.is_staff:
             return Borrowing.objects.select_related("book", "user")
-        return (Borrowing.objects.filter(user=user)
-                .select_related("book", "user"))
+        return Borrowing.objects.filter(
+            user=user
+        ).select_related("book", "user")
 
     def get_serializer_class(self):
         if self.action == "list":

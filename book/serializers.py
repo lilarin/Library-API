@@ -3,7 +3,6 @@ from book.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
-
     def validate(self, attrs):
         inventory = attrs.get("inventory")
         daily_fee = attrs.get("daily_fee")
@@ -28,10 +27,23 @@ class BookSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Book
-        fields = ("id", "title", "author", "cover", "inventory", "daily_fee")
+        fields = (
+            "id",
+            "title",
+            "author",
+            "cover",
+            "inventory",
+            "daily_fee"
+        )
 
 
 class BookDetailSerializer(BookSerializer):
     class Meta:
         model = Book
-        fields = ("title", "author", "cover", "inventory", "daily_fee")
+        fields = (
+            "title",
+            "author",
+            "cover",
+            "inventory",
+            "daily_fee"
+        )
