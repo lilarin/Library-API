@@ -13,9 +13,15 @@ class BorrowingSerializer(serializers.ModelSerializer):
                 {"book": "This book is not available for borrowing."}
             )
 
-        if expected_return_date and borrow_date and expected_return_date < borrow_date:
+        if (
+            expected_return_date and borrow_date
+            and expected_return_date < borrow_date
+        ):
             raise serializers.ValidationError(
-                {"expected_return_date": "Expected return date cannot be earlier than borrow date."}
+                {
+                    "expected_return_date": "Expected return date"
+                    " cannot be earlier than borrow date."
+                }
             )
 
         return attrs
