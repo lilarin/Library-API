@@ -12,10 +12,13 @@ def send_message(message):
         try:
             requests.post(
                 url=f"https://api.telegram.org/bot{token}/sendMessage",
-                data={"chat_id": chat_id, "text": message}
+                data={
+                    "chat_id": chat_id,
+                    "text": message
+                }
             )
         except requests.exceptions.RequestException as error:
             print(
                 f"An error occurred while sending "
-                f"message to the TelegramAPI: {error}"
+                f"message to the Telegram API: {error}"
             )
