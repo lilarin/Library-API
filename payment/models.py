@@ -105,7 +105,8 @@ class Payment(models.Model):
 
     @staticmethod
     def validate_type_payment_status(borrowing, payment_type, error_to_raise):
-        if payment_type == Payment.Type.PAYMENT and borrowing.actual_return_date:
+        if (payment_type == Payment.Type.PAYMENT
+                and borrowing.actual_return_date):
             raise error_to_raise(
                 {
                     "payment_type": "Cannot pay for returned book",
@@ -117,12 +118,20 @@ class Payment(models.Model):
         if not borrowing:
             raise error_to_raise(
                 {
-                    "borrowing": "Payment must be associated with a borrowing record.",
+                    "borrowing": "Payment must be with a borrowing record",
                 }
             )
 
     def clean(self):
-        self.validate_positive_money_to_pay(self.money_to_pay, ValueError)
-        self.validate_paid_status(self.status, self.session_id, self.session_url, ValueError)
-        self.validate_type_payment_status(self.borrowing, self.payment_type, ValueError)
-        self.validate_borrowing_exists(self.borrowing, ValueError)
+        self.validate_positive_money_to_pay(
+            self.money_to_pay, ValueError
+        )
+        self.validate_paid_status(
+            self.status, self.session_id, self.session_url, ValueError
+        )
+        self.validate_type_payment_status(
+            self.borrowing, self.payment_type, ValueError
+        )
+        self.validate_borrowing_exists(
+            self.borrowing, ValueError
+        )
