@@ -12,7 +12,7 @@ class BookModelTest(TestCase):
             inventory=5,
             daily_fee=0.39
         )
-        self.assertEqual(str(self.book), '"The Pragmatic Programmer", by Andrew Hunt and David Thomas')
+        self.assertEqual(str(self.book), '"The Pragmatic Programmer" by Andrew Hunt and David Thomas')
         self.assertEqual(self.book.cover, Book.CoverType.HARD)
         self.assertEqual(self.book.inventory, 5)
         self.assertEqual(self.book.daily_fee, 0.39)

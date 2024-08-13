@@ -1,9 +1,13 @@
-from django.shortcuts import render
-from rest_framework.viewsets import GenericViewSet
+from rest_framework import viewsets
+from book.models import Book
+from book.serializers import BookSerializer, BookDetailSerializer
 
 
-# Create your views here.
-## dfdf
+class BookViewSet(viewsets.ModelViewSet):
+    queryset = Book.objects.all()
 
-class MeViewSet(GenericViewSet):
-    ...
+    def get_serializer_class(self):
+        if self.action == "retrieve":
+            return BookDetailSerializer
+        else:
+            return BookSerializer
