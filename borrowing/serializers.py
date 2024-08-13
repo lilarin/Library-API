@@ -85,7 +85,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "user",
         )
         extra_kwargs = {
-            "user": {"read_only": True},
+            "user": {"read_only": True}
         }
 
 
