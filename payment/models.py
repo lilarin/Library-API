@@ -76,7 +76,7 @@ class Payment(models.Model):
     )
 
     def __str__(self):
-        return f"{self.status} - {self.money_to_pay:.2f} - {self.payment_type}"
+        return f"{self.status} - {self.money_to_pay} - {self.payment_type}"
 
     class Meta:
         ordering = ["-status"]
