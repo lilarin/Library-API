@@ -26,6 +26,7 @@ class BorrowingViewSet(
 ):
     filterset_class = BorrowingFilter
     queryset = Borrowing.objects.all()
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         user = self.request.user
