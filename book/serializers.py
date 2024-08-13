@@ -39,5 +39,12 @@ class BookSerializer(serializers.ModelSerializer):
 
 
 class BookDetailSerializer(BookSerializer):
-    class Meta(BookSerializer.Meta):
-        fields = ("title", "author", "inventory", "daily_fee")
+    class Meta:
+        model = Book
+        fields = (
+            "title",
+            "author",
+            "cover",
+            "inventory",
+            "daily_fee"
+        )

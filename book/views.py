@@ -1,5 +1,4 @@
 from rest_framework import viewsets
-from rest_framework.response import Response
 from book.models import Book
 from book.serializers import BookSerializer, BookDetailSerializer
 
