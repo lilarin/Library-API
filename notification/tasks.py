@@ -9,7 +9,7 @@ def send_active_borrowings_to_chat():
         actual_return_date__isnull=True
     )
     if active_borrowings:
-        message = f"Active Borrowings: \n"
+        message = "Active Borrowings: \n"
 
         for borrowing in active_borrowings:
             message += f"\n{borrowing}\n"
