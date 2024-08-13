@@ -5,10 +5,17 @@ from borrowing.models import Borrowing
 class BorrowingSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         book = attrs.get("book")
+        borrow_date = attrs.get("borrow_date")
+        expected_return_date = attrs.get("expected_return_date")
 
         if book.inventory < 1:
             raise serializers.ValidationError(
                 {"book": "This book is not available for borrowing."}
+            )
+
+        if expected_return_date and borrow_date and expected_return_date < borrow_date:
+            raise serializers.ValidationError(
+                {"expected_return_date": "Expected return date cannot be earlier than borrow date."}
             )
 
         return attrs
@@ -31,3 +38,6 @@ class BorrowingSerializer(serializers.ModelSerializer):
             "book",
             "user",
         )
+        extra_kwargs = {
+            "user": {"read_only": True}
+        }
