@@ -87,9 +87,19 @@ class Payment(models.Model):
     class Meta:
         ordering = ["-status"]
 
-    def change_status_and_delete(self, status):
-        ...
+    # TODO need to speak about method if customer paid for book,
+    #  does book need to be deleted
 
+    # def delete_borrowing_and_payment_if_paid(self, new_status):
+    #     if new_status == self.Status.PAID:
+    #         if self.borrowing:
+    #             self.borrowing.delete()
+    #         self.delete()
+    #     else:
+    #         self.status = new_status
+
+    # TODO speak about can implement custom logic
+    #  for that is type is FINE, you need to pay more money for book
     def change_type(self):
         if self.borrowing.actual_return_date:
             if self.borrowing.actual_return_date > self.borrowing.expected_return_date:
