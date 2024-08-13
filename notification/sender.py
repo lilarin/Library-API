@@ -18,6 +18,6 @@ def send_message(message):
             )
         except requests.exceptions.RequestException as error:
             print(
-                f"An error occurred while sending"
+                f"An error occurred while sending "
                 f"message to the TelegramAPI: {error}"
             )
