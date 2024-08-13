@@ -3,6 +3,23 @@ from borrowing.models import Borrowing
 
 
 class BorrowingSerializer(serializers.ModelSerializer):
+    book_title = serializers.CharField(source="book.title", read_only=True)
+    user_email = serializers.EmailField(source="user.email", read_only=True)
+
+    class Meta:
+        model = Borrowing
+        fields = (
+            "id",
+            "borrow_date",
+            "expected_return_date",
+            "actual_return_date",
+            "book_title",
+            "user_email",
+        )
+        read_only_fields = ("book_title", "user_email")
+
+
+class BorrowingCreateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         book = attrs.get("book")
         borrow_date = attrs.get("borrow_date")

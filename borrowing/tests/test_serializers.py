@@ -1,7 +1,7 @@
 from django.test import TestCase
 from rest_framework.exceptions import ValidationError
 from borrowing.models import Borrowing, Book
-from borrowing.serializers import BorrowingSerializer
+from borrowing.serializers import BorrowingCreateSerializer
 from django.contrib.auth import get_user_model
 
 User = get_user_model()
@@ -29,7 +29,7 @@ class BorrowingSerializerTest(TestCase):
             "actual_return_date": None,
             "book": self.book.id,
         }
-        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
+        serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
         self.assertTrue(serializer.is_valid(), serializer.errors)
         borrowing = serializer.save()
         self.assertEqual(borrowing.book, self.book)
@@ -46,7 +46,7 @@ class BorrowingSerializerTest(TestCase):
             "actual_return_date": None,
             "book": self.book.id,
         }
-        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
+        serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
 
         with self.assertRaises(ValidationError) as context:
             serializer.is_valid(raise_exception=True)
@@ -60,7 +60,7 @@ class BorrowingSerializerTest(TestCase):
             "actual_return_date": None,
             "book": self.book.id,
         }
-        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
+        serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
         self.assertTrue(serializer.is_valid(), serializer.errors)
         borrowing = serializer.save()
         self.assertEqual(Borrowing.objects.count(), 1)
@@ -75,6 +75,6 @@ class BorrowingSerializerTest(TestCase):
             "actual_return_date": None,
             "book": self.book.id,
         }
-        serializer = BorrowingSerializer(data=data, context={"request": self._request_mock(self.user)})
+        serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
         self.assertFalse(serializer.is_valid())
         self.assertIn("expected_return_date", serializer.errors)
