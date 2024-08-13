@@ -59,11 +59,11 @@ class PaymentSerializer(serializers.ModelSerializer):
             session_url,
             serializers.ValidationError
         )
-        Payment.validate_type_payment_status(
-            attrs["borrowing"],
-            attrs["payment_type"],
-            serializers.ValidationError
-        )
+        # Payment.validate_type_payment_status(
+        #     attrs["borrowing"],
+        #     attrs["payment_type"],
+        #     serializers.ValidationError
+        # )
         Payment.validate_borrowing_exists(
             attrs["borrowing"],
             serializers.ValidationError

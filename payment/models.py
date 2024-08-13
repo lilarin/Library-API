@@ -86,13 +86,17 @@ class Payment(models.Model):
         if self.borrowing.actual_return_date:
             if self.borrowing.actual_return_date > self.borrowing.expected_return_date:
                 self.payment_type = self.Type.FINE
+                print("Payment type set to FINE")
             else:
                 self.payment_type = self.Type.PAYMENT
+                print("Payment type set to PAYMENT")
         else:
-            if timezone.now() > self.borrowing.expected_return_date:
+            if timezone.now().date() > self.borrowing.expected_return_date:
                 self.payment_type = self.Type.FINE
+                print("Payment type set to FINE")
             else:
                 self.payment_type = self.Type.PAYMENT
+                print("Payment type set to PAYMENT")
 
     @staticmethod
     def validate_positive_money_to_pay(money_to_pay, error_to_raise):
@@ -119,15 +123,21 @@ class Payment(models.Model):
                     }
                 )
 
-    @staticmethod
-    def validate_type_payment_status(borrowing, payment_type, error_to_raise):
-        if (payment_type == Payment.Type.PAYMENT
-                and borrowing.actual_return_date):
-            raise error_to_raise(
-                {
-                    "payment_type": "Cannot pay for returned book",
-                }
-            )
+    # TODO need to speak about that validation.
+    #  When borrowing.actual_return_date > borrowing_expected_return_date
+    #  2 choices:
+    #  1) make validation that you don't need to pay for returned book
+    #  2) create payment with type FINE (method change_type)
+
+    # @staticmethod
+    # def validate_type_payment_status(borrowing, payment_type, error_to_raise):
+    #     if (payment_type == Payment.Type.PAYMENT
+    #             and borrowing.actual_return_date):
+    #         raise error_to_raise(
+    #             {
+    #                 "payment_type": "Cannot pay for returned book",
+    #             }
+    #         )
 
     @staticmethod
     def validate_borrowing_exists(borrowing, error_to_raise):
@@ -145,9 +155,9 @@ class Payment(models.Model):
         self.validate_paid_status(
             self.status, self.session_id, self.session_url, ValueError
         )
-        self.validate_type_payment_status(
-            self.borrowing, self.payment_type, ValueError
-        )
+        # self.validate_type_payment_status(
+        #     self.borrowing, self.payment_type, ValueError
+        # )
         self.validate_borrowing_exists(
             self.borrowing, ValueError
         )
