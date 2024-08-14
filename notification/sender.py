@@ -11,13 +11,14 @@ def send_message(message):
     if token and chat_id:
         try:
             requests.post(
-                url="https://api.telegram.org/bot{0}/{1}".format(
-                    token, "sendMessage"
-                ),
-                data={"chat_id": chat_id, "text": message}
+                url=f"https://api.telegram.org/bot{token}/sendMessage",  # noqa: E231, E501
+                data={
+                    "chat_id": chat_id,
+                    "text": message
+                }
             )
         except requests.exceptions.RequestException as error:
             print(
-                f"An error occurred while sending "
-                f"message to the TelegramAPI: {error}"
+                "An error occurred while sending "
+                f"message to the Telegram API: {error}"
             )

@@ -1,0 +1,57 @@
+services:
+  library_service:
+    build:
+      context: .
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    command: >
+      sh -c "python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+#      - postgres
+      - redis
+      - celery
+      - celery-beat
+
+#  postgres:
+#    image: postgres:16.0-alpine3.17
+#    restart: always
+#    env_file:
+#      - .env
+#    ports:
+#      - "5432:5432"
+#    volumes:
+#      - library_db_volume:$PGDATA
+
+  redis:
+    image: redis:7.4.0-alpine3.20
+    restart: always
+
+  celery:
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+    command: celery -A library_service worker --loglevel=info
+    depends_on:
+      - redis
+
+  celery-beat:
+    build:
+      context: .
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+    command: celery -A library_service beat --loglevel=info
+    depends_on:
+      - redis
+
+#volumes:
+#  library_db_volume:
