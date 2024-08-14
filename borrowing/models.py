@@ -2,6 +2,7 @@ from decimal import Decimal
 
 from django.core.exceptions import ValidationError
 from django.db import models
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from book.models import Book
@@ -36,27 +37,48 @@ class Borrowing(models.Model):
                 ))
 
     def calculate_money_to_pay(self):
+        if isinstance(self.expected_return_date, str):
+            self.expected_return_date = timezone.datetime.strptime(
+                self.expected_return_date, "%Y-%m-%d"
+            ).date()
+
+        if isinstance(self.borrow_date, str):
+            self.borrow_date = timezone.datetime.strptime(
+                self.borrow_date, "%Y-%m-%d"
+            ).date()
+
         borrow_days = (self.expected_return_date - self.borrow_date).days
 
         if borrow_days < 0:
             borrow_days = 0
 
-        base_payment = Decimal(borrow_days) * self.book.daily_fee
+        daily_fee_decimal = Decimal(str(self.book.daily_fee))
+        base_payment = Decimal(borrow_days) * daily_fee_decimal
 
         if self.actual_return_date:
-            return_days = (self.actual_return_date - self.expected_return_date
-                           ).days
+            if isinstance(self.actual_return_date, str):
+                self.actual_return_date = timezone.datetime.strptime(
+                    self.actual_return_date, "%Y-%m-%d"
+                ).date()
+
+            return_days = (
+                self.actual_return_date - self.expected_return_date
+            ).days
+            if return_days < 1:
+                return_days += 1
 
             if self.actual_return_date < self.expected_return_date:
                 return max(
                     Decimal(0),
                     base_payment - Decimal(
-                        abs(return_days)) * self.book.daily_fee
+                        abs(return_days)
+                    ) * daily_fee_decimal
                 )
             elif self.actual_return_date > self.expected_return_date:
                 # TODO: Can add fine for delay
-                return base_payment + Decimal(return_days
-                                              ) * self.book.daily_fee
+                return base_payment + Decimal(
+                    return_days
+                ) * daily_fee_decimal
 
         return base_payment
 
