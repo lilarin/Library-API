@@ -1,6 +1,5 @@
-from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
