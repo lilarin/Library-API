@@ -5,6 +5,10 @@ from rest_framework import serializers
 from borrowing.models import Borrowing
 from user.models import User
 from user.serializers import UserSerializer
+from payment.serializers import (
+    PaymentCreateSerializer,
+    PaymentSerializer
+)
 
 
 class UserBorrowingListReadSerializer(serializers.ModelSerializer):
@@ -22,6 +26,7 @@ class BookBorrowingListReadSerializer(serializers.ModelSerializer):
 class BorrowingListReadSerializer(serializers.ModelSerializer):
     book = BookBorrowingListReadSerializer()
     user = UserBorrowingListReadSerializer()
+    payment = PaymentSerializer()
 
     class Meta:
         model = Borrowing
@@ -31,13 +36,15 @@ class BorrowingListReadSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user"
+            "payment",
+            "user",
         ]
 
 
 class BorrowingRetrieveReadSerializer(serializers.ModelSerializer):
     book = BookSerializer()
     user = UserSerializer()
+    payment = PaymentSerializer()
 
     class Meta:
         model = Borrowing
@@ -47,7 +54,8 @@ class BorrowingRetrieveReadSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user",
+            "payment",
+            "user"
         ]
 
 
@@ -89,6 +97,8 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
         borrowing = Borrowing.objects.create(**validated_data)
         return borrowing
 
+    payment = PaymentCreateSerializer(required=False)
+
     class Meta:
         model = Borrowing
         fields = (
@@ -98,6 +108,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
             "actual_return_date",
             "book",
             "user",
+            "payment"
         )
         extra_kwargs = {
             "user": {"read_only": True},

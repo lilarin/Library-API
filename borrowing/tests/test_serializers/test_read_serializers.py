@@ -1,3 +1,5 @@
+from decimal import Decimal
+
 from rest_framework.test import APITestCase
 from django.utils import timezone
 from datetime import timedelta
@@ -25,7 +27,7 @@ class BorrowingSerializersTests(APITestCase):
             author="Test Author",
             cover="HARD",
             inventory=10,
-            daily_fee=1.00,
+            daily_fee=Decimal("1.00")
         )
 
         self.borrowing = Borrowing.objects.create(
@@ -49,6 +51,7 @@ class BorrowingSerializersTests(APITestCase):
                 "actual_return_date",
                 "book",
                 "user",
+                "payment"
             },
         )
         self.assertEqual(data["book"]["title"], self.book.title)
@@ -66,6 +69,7 @@ class BorrowingSerializersTests(APITestCase):
                 "actual_return_date",
                 "book",
                 "user",
+                "payment"
             },
         )
         self.assertEqual(data["book"]["title"], self.book.title)

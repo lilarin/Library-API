@@ -8,7 +8,7 @@ from rest_framework.mixins import (
 )
 from payment.models import Payment
 from payment.serializers import (
-    PaymentSerializer,
+    PaymentSerializer, PaymentListSerializer, PaymentCreateSerializer,
 )
 
 
@@ -21,3 +21,10 @@ class PaymentViewSet(
     serializer_class = PaymentSerializer
     queryset = Payment.objects.all()
     permission_classes = [IsAuthenticated]
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return PaymentListSerializer
+        elif self.action == "create":
+            return PaymentCreateSerializer
+        return self.serializer_class
