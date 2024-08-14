@@ -1,12 +1,27 @@
+from book.models import Book
 from book.serializers import BookSerializer
 from rest_framework import serializers
 
 from borrowing.models import Borrowing
+from user.models import User
 from user.serializers import UserSerializer
 
 
+class UserBorrowingListReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = User
+        fields = ["id", "email"]
+
+
+class BookBorrowingListReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Book
+        fields = ["id", "title", "author", "daily_fee"]
+
+
 class BorrowingListReadSerializer(serializers.ModelSerializer):
-    book = BookSerializer()
+    book = BookBorrowingListReadSerializer()
+    user = UserBorrowingListReadSerializer()
 
     class Meta:
         model = Borrowing
@@ -16,7 +31,7 @@ class BorrowingListReadSerializer(serializers.ModelSerializer):
             "expected_return_date",
             "actual_return_date",
             "book",
-            "user",
+            "user"
         ]
 
 
