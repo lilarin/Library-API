@@ -1,9 +1,16 @@
-from django.utils.translation import gettext as _
+from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from django.contrib.auth import get_user_model, authenticate
+from rest_framework.exceptions import ValidationError
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        label="Password",
+        style={"input_type": "password"},
+        write_only=True,
+        min_length=8
+    )
+
     class Meta:
         model = get_user_model()
         fields = ("id", "email", "password", "is_staff")
