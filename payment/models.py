@@ -1,10 +1,7 @@
 import uuid
-
 from django.db import models
-from django.utils import timezone
 
 from borrowing.models import Borrowing
-from payment.generate_test_session_url import generate_session_url
 
 
 class Payment(models.Model):
@@ -56,34 +53,15 @@ class Payment(models.Model):
     status = models.CharField(
         max_length=24,
         choices=Status.choices,
-        default=Status.PENDING,
-        null=True,
-        blank=True,
     )
     payment_type = models.CharField(
         max_length=24,
         choices=Type.choices,
-        default=Type.PAYMENT,
-        null=True,
-        blank=True
     )
-    borrowing = models.OneToOneField(
-        Borrowing,
-        on_delete=models.CASCADE,
-        related_name="payment",
-        null=True,
-        blank=True,
-        default=1
-    )
-    session_url = models.URLField(
-        null=True,
-        blank=True
-    )
+    session_url = models.URLField()
     session_id = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
-        null=True,
-        blank=True
     )
     money_to_pay = models.DecimalField(
         max_digits=12, decimal_places=2
@@ -99,108 +77,3 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ["-status"]
-
-    # Todo need to implement method for autocomplete money_to_pay
-    # TODO need to speak about method if customer paid for book,
-    #  does book need to be deleted
-
-    # def delete_borrowing_and_payment_if_paid(self, new_status):
-    #     if new_status == self.Status.PAID:
-    #         if self.borrowing:
-    #             self.borrowing.delete()
-    #         self.delete()
-    #     else:
-    #         self.status = new_status
-
-    # TODO speak about can implement custom logic
-    #  for that is type is FINE, you need to pay more money for book
-    def change_type(self):
-        if self.borrowing.actual_return_date:
-            if (self.borrowing.actual_return_date > self.borrowing
-                    .expected_return_date):
-
-                self.payment_type = self.Type.FINE
-                print("Payment type set to FINE")
-            else:
-                self.payment_type = self.Type.PAYMENT
-                print("Payment type set to PAYMENT")
-        else:
-            if timezone.now().date() > self.borrowing.expected_return_date:
-                self.payment_type = self.Type.FINE
-                print("Payment type set to FINE")
-            else:
-                self.payment_type = self.Type.PAYMENT
-                print("Payment type set to PAYMENT")
-
-    # @staticmethod
-    # def validate_positive_money_to_pay(money_to_pay, error_to_raise):
-    #     if money_to_pay < 1:
-    #         raise error_to_raise(
-    #             {
-    #                 "money_to_pay": "money_to_pay cannot be less than 1",
-    #             }
-    #         )
-    #
-    # @staticmethod
-    # def validate_paid_status(
-    # status, session_id, session_url, error_to_raise
-    # ):
-    #     if status == Payment.Status.PAID:
-    #         if not session_id:
-    #             error_to_raise(
-    #                 {
-    #                     "session_id": "Paid status need a valid session id",
-    #                 }
-    #             )
-    #         if not session_url:
-    #             raise error_to_raise(
-    #                 {
-    #                     "session_url": "session_url cannot be empty",
-    #                 }
-    #             )
-    #
-    # # TODO need to speak about that validation.
-    # #  When borrowing.actual_return_date > borrowing_expected_return_date
-    # #  2 choices:
-    # #  1) make validation that you don't need to pay for returned book
-    # #  2) create payment with type FINE (method change_type)
-    #
-    # # @staticmethod
-    # # def validate_type_payment_status(
-    # # borrowing, payment_type, error_to_raise
-    # # ):
-    # #     if (payment_type == Payment.Type.PAYMENT
-    # #             and borrowing.actual_return_date):
-    # #         raise error_to_raise(
-    # #             {
-    # #                 "payment_type": "Cannot pay for returned book",
-    # #             }
-    # #         )
-    #
-    # @staticmethod
-    # def validate_borrowing_exists(borrowing, error_to_raise):
-    #     if not borrowing:
-    #         raise error_to_raise(
-    #             {
-    #                 "borrowing": "Payment must be with a borrowing record",
-    #             }
-    #         )
-    #
-    # def clean(self):
-    #     self.validate_positive_money_to_pay(
-    #         self.money_to_pay, ValueError
-    #     )
-    #     self.validate_paid_status(
-    #         self.status, self.session_id, self.session_url, ValueError
-    #     )
-    #     # self.validate_type_payment_status(
-    #     #     self.borrowing, self.payment_type, ValueError
-    #     # )
-    #     self.validate_borrowing_exists(
-    #         self.borrowing, ValueError
-    #     )
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        self.session_url = generate_session_url()
-        super().save(*args, **kwargs)
