@@ -7,7 +7,8 @@ class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         label="Password",
         style={"input_type": "password"},
-        write_only=True
+        write_only=True,
+        min_length=8
     )
 
     class Meta:
@@ -17,11 +18,6 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True, "min_length": 8}
         }
-
-    def validate_password(self, value):
-        if len(value) < 8:
-            raise ValidationError("Password must be at least 8 characters long.")
-        return value
 
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
