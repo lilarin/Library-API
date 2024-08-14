@@ -4,7 +4,7 @@ from rest_framework.permissions import IsAuthenticated
 from payment.models import Payment
 from payment.serializers import (
     PaymentSerializer,
-    PaymentAdminListSerializer,
+    PaymentAdminListSerializer, PaymentCreateSerializer,
     # PaymentDetailSerializer
 )
 
@@ -14,6 +14,7 @@ class PaymentViewSet(viewsets.ModelViewSet):
     queryset = Payment.objects.all()
     permission_classes = [IsAuthenticated]
 
+    # TODO need to optimize
     def get_queryset(self):
         user = self.request.user
 
@@ -34,6 +35,8 @@ class PaymentViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return PaymentAdminListSerializer
+        elif self.action == "create":
+            return PaymentCreateSerializer
         # elif self.action == "retrieve":
         #     return PaymentDetailSerializer
         return PaymentSerializer
