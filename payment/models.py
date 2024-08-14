@@ -71,6 +71,9 @@ class Payment(models.Model):
         Borrowing,
         on_delete=models.CASCADE,
         related_name="payment",
+        null=True,
+        blank=True,
+        default=1
     )
     session_url = models.URLField(
         null=True,
@@ -97,6 +100,7 @@ class Payment(models.Model):
     class Meta:
         ordering = ["-status"]
 
+    # Todo need to implement method for autocomplete money_to_pay
     # TODO need to speak about method if customer paid for book,
     #  does book need to be deleted
 
@@ -138,7 +142,9 @@ class Payment(models.Model):
     #         )
     #
     # @staticmethod
-    # def validate_paid_status(status, session_id, session_url, error_to_raise):
+    # def validate_paid_status(
+    # status, session_id, session_url, error_to_raise
+    # ):
     #     if status == Payment.Status.PAID:
     #         if not session_id:
     #             error_to_raise(
