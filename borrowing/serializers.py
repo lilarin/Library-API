@@ -3,6 +3,7 @@ from book.serializers import BookSerializer
 from rest_framework import serializers
 
 from borrowing.models import Borrowing
+from payment.models import Payment
 from user.models import User
 from user.serializers import UserSerializer
 from payment.serializers import (
@@ -23,10 +24,16 @@ class BookBorrowingListReadSerializer(serializers.ModelSerializer):
         fields = ["id", "title", "author", "daily_fee"]
 
 
+class PaymentBorrowingListReadSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = ["status", "session_url", "money_to_pay"]
+
+
 class BorrowingListReadSerializer(serializers.ModelSerializer):
     book = BookBorrowingListReadSerializer()
     user = UserBorrowingListReadSerializer()
-    payment = PaymentSerializer()
+    payment = PaymentBorrowingListReadSerializer()
 
     class Meta:
         model = Borrowing
