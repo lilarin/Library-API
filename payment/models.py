@@ -1,6 +1,8 @@
 import uuid
 
 from django.db import models
+from django.utils import timezone
+
 from borrowing.models import Borrowing
 
 
@@ -43,12 +45,12 @@ class Payment(models.Model):
     """
 
     class Status(models.TextChoices):
-        PENDING = "PENDING", "Waiting for Payment"
-        PAID = "PAID", "Successfully paid"
+        PENDING = "PENDING", "Pending"
+        PAID = "PAID", "Paid"
 
     class Type(models.TextChoices):
-        PAYMENT = "PAYMENT_FOR_BOOK", "Payment for book"
-        FINE = "FINE_FOR_DELAY", "Fine for delay"
+        PAYMENT = "PAYMENT", "Payment"
+        FINE = "FINE", "Fine"
 
     status = models.CharField(
         max_length=24,
@@ -67,7 +69,6 @@ class Payment(models.Model):
     )
     session_url = models.URLField()
     session_id = models.UUIDField(
-        primary_key=True,
         default=uuid.uuid4,
         editable=False,
     )
@@ -76,10 +77,46 @@ class Payment(models.Model):
     )
 
     def __str__(self):
-        return f"{self.status} - {self.money_to_pay} - {self.payment_type}"
+        return (
+            f"Status: {self.status}"
+            f"Type: {self.payment_type}"
+            f"Status: {self.status}"
+            f"Money to pay - {self.money_to_pay}"
+        )
 
     class Meta:
         ordering = ["-status"]
+
+    # TODO need to speak about method if customer paid for book,
+    #  does book need to be deleted
+
+    # def delete_borrowing_and_payment_if_paid(self, new_status):
+    #     if new_status == self.Status.PAID:
+    #         if self.borrowing:
+    #             self.borrowing.delete()
+    #         self.delete()
+    #     else:
+    #         self.status = new_status
+
+    # TODO speak about can implement custom logic
+    #  for that is type is FINE, you need to pay more money for book
+    def change_type(self):
+        if self.borrowing.actual_return_date:
+            if (self.borrowing.actual_return_date > self.borrowing
+                    .expected_return_date):
+
+                self.payment_type = self.Type.FINE
+                print("Payment type set to FINE")
+            else:
+                self.payment_type = self.Type.PAYMENT
+                print("Payment type set to PAYMENT")
+        else:
+            if timezone.now().date() > self.borrowing.expected_return_date:
+                self.payment_type = self.Type.FINE
+                print("Payment type set to FINE")
+            else:
+                self.payment_type = self.Type.PAYMENT
+                print("Payment type set to PAYMENT")
 
     @staticmethod
     def validate_positive_money_to_pay(money_to_pay, error_to_raise):
@@ -106,15 +143,23 @@ class Payment(models.Model):
                     }
                 )
 
-    @staticmethod
-    def validate_type_payment_status(borrowing, payment_type, error_to_raise):
-        if (payment_type == Payment.Type.PAYMENT
-                and borrowing.actual_return_date):
-            raise error_to_raise(
-                {
-                    "payment_type": "Cannot pay for returned book",
-                }
-            )
+    # TODO need to speak about that validation.
+    #  When borrowing.actual_return_date > borrowing_expected_return_date
+    #  2 choices:
+    #  1) make validation that you don't need to pay for returned book
+    #  2) create payment with type FINE (method change_type)
+
+    # @staticmethod
+    # def validate_type_payment_status(
+    # borrowing, payment_type, error_to_raise
+    # ):
+    #     if (payment_type == Payment.Type.PAYMENT
+    #             and borrowing.actual_return_date):
+    #         raise error_to_raise(
+    #             {
+    #                 "payment_type": "Cannot pay for returned book",
+    #             }
+    #         )
 
     @staticmethod
     def validate_borrowing_exists(borrowing, error_to_raise):
@@ -132,9 +177,9 @@ class Payment(models.Model):
         self.validate_paid_status(
             self.status, self.session_id, self.session_url, ValueError
         )
-        self.validate_type_payment_status(
-            self.borrowing, self.payment_type, ValueError
-        )
+        # self.validate_type_payment_status(
+        #     self.borrowing, self.payment_type, ValueError
+        # )
         self.validate_borrowing_exists(
             self.borrowing, ValueError
         )
