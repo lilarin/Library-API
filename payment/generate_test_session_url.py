@@ -9,3 +9,4 @@ def generate_session_url():
 
 
 session_url = generate_session_url()
+print(session_url)

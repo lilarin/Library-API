@@ -53,12 +53,17 @@ class Payment(models.Model):
     status = models.CharField(
         max_length=24,
         choices=Status.choices,
+        default=Status.PENDING,
     )
     payment_type = models.CharField(
         max_length=24,
         choices=Type.choices,
+        default=Type.PAYMENT
     )
-    session_url = models.URLField()
+    session_url = models.URLField(
+        null=True,
+        blank=True
+    )
     session_id = models.UUIDField(
         default=uuid.uuid4,
         editable=False,
@@ -77,3 +82,8 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ["-status"]
+
+    def save(self, *args, **kwargs):
+        base_url = "https://payment-provider.com/session/"
+        self.session_url = f"{base_url}{self.session_id}"
+        super().save(*args, **kwargs)
