@@ -21,7 +21,6 @@ class PaymentCreateSerializer(serializers.ModelSerializer):
         model = Payment
         fields = (
             "id",
-            "money_to_pay"
         )
 
 

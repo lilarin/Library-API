@@ -49,6 +49,7 @@ class BorrowingSerializersTests(APITestCase):
                 "actual_return_date",
                 "book",
                 "user",
+                "payment"
             },
         )
         self.assertEqual(data["book"]["title"], self.book.title)

@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from book.models import Book
 from library_service import settings
+from payment.models import Payment
 
 
 class Borrowing(models.Model):
@@ -15,6 +16,10 @@ class Borrowing(models.Model):
     )
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    payment = models.OneToOneField(
+        Payment,
+        on_delete=models.CASCADE,
     )
 
     def clean(self):
@@ -29,6 +34,11 @@ class Borrowing(models.Model):
                 ))
 
     def save(self, *args, **kwargs):
+        payment = Payment.objects.create(
+            money_to_pay=100,  # future method to calculate money_to_pay
+            payment_type=Payment.Type.PAYMENT
+        )
+        self.payment = payment
         self.full_clean()
         super().save(*args, **kwargs)
 
