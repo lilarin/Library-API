@@ -1,12 +1,12 @@
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
+from rest_framework.exceptions import ValidationError
 
 
 class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(
         label="Password",
         style={"input_type": "password"},
-        trim_whitespace=False,
         write_only=True
     )
 
@@ -17,6 +17,11 @@ class UserSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             "password": {"write_only": True, "min_length": 8}
         }
+
+    def validate_password(self, value):
+        if len(value) < 8:
+            raise ValidationError("Password must be at least 8 characters long.")
+        return value
 
     def create(self, validated_data):
         return get_user_model().objects.create_user(**validated_data)
