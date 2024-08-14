@@ -4,6 +4,13 @@ from django.contrib.auth import get_user_model, authenticate
 
 
 class UserSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(
+        label="Password",
+        style={"input_type": "password"},
+        trim_whitespace=False,
+        write_only=True
+    )
+
     class Meta:
         model = get_user_model()
         fields = ("id", "email", "password", "is_staff")
