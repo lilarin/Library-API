@@ -1,5 +1,4 @@
 import uuid
-
 from django.db import models
 from django.utils import timezone
 
@@ -67,14 +66,6 @@ class Payment(models.Model):
         null=True,
         blank=True
     )
-    borrowing = models.OneToOneField(
-        Borrowing,
-        on_delete=models.CASCADE,
-        related_name="payment",
-        null=True,
-        blank=True,
-        default=1
-    )
     session_url = models.URLField(
         null=True,
         blank=True
@@ -100,6 +91,11 @@ class Payment(models.Model):
     class Meta:
         ordering = ["-status"]
 
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        self.session_url = generate_session_url()
+        super().save(*args, **kwargs)
+
     # Todo need to implement method for autocomplete money_to_pay
     # TODO need to speak about method if customer paid for book,
     #  does book need to be deleted
@@ -114,23 +110,23 @@ class Payment(models.Model):
 
     # TODO speak about can implement custom logic
     #  for that is type is FINE, you need to pay more money for book
-    def change_type(self):
-        if self.borrowing.actual_return_date:
-            if (self.borrowing.actual_return_date > self.borrowing
-                    .expected_return_date):
-
-                self.payment_type = self.Type.FINE
-                print("Payment type set to FINE")
-            else:
-                self.payment_type = self.Type.PAYMENT
-                print("Payment type set to PAYMENT")
-        else:
-            if timezone.now().date() > self.borrowing.expected_return_date:
-                self.payment_type = self.Type.FINE
-                print("Payment type set to FINE")
-            else:
-                self.payment_type = self.Type.PAYMENT
-                print("Payment type set to PAYMENT")
+    # def change_type(self):
+    #     if self.borrowing.actual_return_date:
+    #         if (self.borrowing.actual_return_date > self.borrowing
+    #                 .expected_return_date):
+    #
+    #             self.payment_type = self.Type.FINE
+    #             print("Payment type set to FINE")
+    #         else:
+    #             self.payment_type = self.Type.PAYMENT
+    #             print("Payment type set to PAYMENT")
+    #     else:
+    #         if timezone.now().date() > self.borrowing.expected_return_date:
+    #             self.payment_type = self.Type.FINE
+    #             print("Payment type set to FINE")
+    #         else:
+    #             self.payment_type = self.Type.PAYMENT
+    #             print("Payment type set to PAYMENT")
 
     # @staticmethod
     # def validate_positive_money_to_pay(money_to_pay, error_to_raise):
@@ -199,8 +195,3 @@ class Payment(models.Model):
     #     self.validate_borrowing_exists(
     #         self.borrowing, ValueError
     #     )
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        self.session_url = generate_session_url()
-        super().save(*args, **kwargs)
