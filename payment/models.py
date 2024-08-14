@@ -84,5 +84,4 @@ class Payment(models.Model):
     def save(self, *args, **kwargs):
         base_url = "https://payment-provider.com/session/"
         self.session_url = f"{base_url}{self.session_id}"
-        self.money_to_pay = 100
         super().save(*args, **kwargs)
