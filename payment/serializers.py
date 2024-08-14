@@ -16,6 +16,14 @@ class PaymentSerializer(serializers.ModelSerializer):
             "session_url", "session_id", "money_to_pay"
         )
 
+
+class PaymentCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Payment
+        fields = (
+            "money_to_pay",
+        )
+
     def create(self, validated_data):
         with transaction.atomic():
             try:
@@ -45,33 +53,33 @@ class PaymentSerializer(serializers.ModelSerializer):
                 )
             return instance
 
-    def validate(self, attrs):
-        session_id = attrs.get("session_id")
-        session_url = attrs.get("session_url")
+    # def validate(self, attrs):
+    #     session_id = attrs.get("session_id")
+    #     session_url = attrs.get("session_url")
+    #
+    #     Payment.validate_positive_money_to_pay(
+    #         attrs["money_to_pay"],
+    #         serializers.ValidationError
+    #     )
+    #     Payment.validate_paid_status(
+    #         attrs["status"],
+    #         session_id,
+    #         session_url,
+    #         serializers.ValidationError
+    #     )
+    #     # Payment.validate_type_payment_status(
+    #     #     attrs["borrowing"],
+    #     #     attrs["payment_type"],
+    #     #     serializers.ValidationError
+    #     # )
+    #     Payment.validate_borrowing_exists(
+    #         attrs["borrowing"],
+    #         serializers.ValidationError
+    #     )
+    #     return attrs
 
-        Payment.validate_positive_money_to_pay(
-            attrs["money_to_pay"],
-            serializers.ValidationError
-        )
-        Payment.validate_paid_status(
-            attrs["status"],
-            session_id,
-            session_url,
-            serializers.ValidationError
-        )
-        # Payment.validate_type_payment_status(
-        #     attrs["borrowing"],
-        #     attrs["payment_type"],
-        #     serializers.ValidationError
-        # )
-        Payment.validate_borrowing_exists(
-            attrs["borrowing"],
-            serializers.ValidationError
-        )
-        return attrs
 
-
-# waiting for borrowing serializers
+#
 class PaymentAdminListSerializer(PaymentSerializer):
     borrowing = BorrowingRetrieveReadSerializer(
         read_only=True
