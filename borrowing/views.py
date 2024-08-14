@@ -41,6 +41,8 @@ class BorrowingViewSet(
             return BorrowingListReadSerializer
         elif self.action == "retrieve":
             return BorrowingRetrieveReadSerializer
+        elif self.action == "return_borrowing":
+            return BorrowingReturnSerializer
         return BorrowingCreateSerializer
 
     def perform_create(self, serializer):
@@ -58,7 +60,7 @@ class BorrowingViewSet(
             borrowing,
             data=request.data,
             context={"request": request},
-            partial=True
+            partial=False
         )
         serializer.is_valid(raise_exception=True)
         serializer.save()
