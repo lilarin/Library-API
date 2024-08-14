@@ -9,7 +9,7 @@ from user.models import User
 class PaymentModelTests(TestCase):
 
     def setUp(self):
-        self.user = User.objects.create_user(email='testuser@test.com', password='testpassword')
+        self.user = User.objects.create_user(email="testuser@test.com", password="testpassword")
         self.book = Book.objects.create(
             title="Test Book",
             author="Test Author",

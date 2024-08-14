@@ -35,10 +35,10 @@ class PaymentSerializerTests(TestCase):
     def test_payment_serializer_valid(self):
         serializer = PaymentSerializer(instance=self.payment)
         data = serializer.data
-        self.assertEqual(data['status'], Payment.Status.PENDING)
-        self.assertEqual(data['payment_type'], Payment.Type.PAYMENT)
-        self.assertEqual(data['money_to_pay'], "100.00")
-        self.assertEqual(data['session_url'], "https://payment-provider.com/session/test")
+        self.assertEqual(data["status"], Payment.Status.PENDING)
+        self.assertEqual(data["payment_type"], Payment.Type.PAYMENT)
+        self.assertEqual(data["money_to_pay"], "100.00")
+        self.assertEqual(data["session_url"], "https://payment-provider.com/session/test")
 
     def test_payment_serializer_create(self):
         new_borrowing = Borrowing.objects.create(
@@ -75,7 +75,6 @@ class PaymentSerializerTests(TestCase):
             "borrowing": new_borrowing.id,
             "money_to_pay": "200.00",
             "session_url": "https://payment-provider.com/session/test"
-
         }
         serializer = PaymentSerializer(instance=self.payment, data=data, partial=True)
         if not serializer.is_valid():
