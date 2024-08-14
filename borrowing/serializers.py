@@ -108,7 +108,7 @@ class BorrowingCreateSerializer(serializers.ModelSerializer):
 class BorrowingReturnSerializer(serializers.ModelSerializer):
     def validate_actual_return_date(self, value):
         if value is None:
-            raise serializers.ValidationError("The return date cannot be null.")
+            raise serializers.ValidationError("The return date can't be null.")
         return value
 
     def validate(self, attrs):
