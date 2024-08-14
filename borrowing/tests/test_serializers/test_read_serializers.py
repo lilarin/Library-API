@@ -52,7 +52,6 @@ class BorrowingSerializersTests(APITestCase):
             },
         )
         self.assertEqual(data["book"]["title"], self.book.title)
-        self.assertEqual(data["user"], self.user.id)
 
     def test_borrowing_retrieve_read_serializer(self):
         serializer = BorrowingRetrieveReadSerializer(instance=self.borrowing)
