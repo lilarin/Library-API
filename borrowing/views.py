@@ -1,5 +1,6 @@
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.mixins import (
     ListModelMixin,
     RetrieveModelMixin,
@@ -46,7 +47,10 @@ class BorrowingViewSet(
         return BorrowingCreateSerializer
 
     def perform_create(self, serializer):
-        serializer.save(user=self.request.user)
+        try:
+            serializer.save(user=self.request.user)
+        except Exception as e:
+            raise ValidationError({"detail": str(e)})
 
     @action(
         detail=True,
