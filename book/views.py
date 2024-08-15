@@ -44,22 +44,6 @@ class BookViewSet(
                 type={"type": "string"},
                 description="Filter books by author"
             ),
-            OpenApiParameter(
-                name="cover",
-                type={"type": "string"},
-                enum=["HARD", "SOFT"],
-                description="Filter books by cover type (HARD or SOFT)"
-            ),
-            OpenApiParameter(
-                name="inventory",
-                type={"type": "integer"},
-                description="Filter books by inventory count"
-            ),
-            OpenApiParameter(
-                name="daily_fee",
-                type={"type": "number", "format": "float"},
-                description="Filter books by daily fee"
-            ),
         ],
         responses=BookSerializer,
         description=(

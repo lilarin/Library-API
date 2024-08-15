@@ -94,38 +94,18 @@ class BorrowingViewSet(
     @extend_schema(
         parameters=[
             OpenApiParameter(
-                name="user_id",
+                name="is_active",
+                type={"type": "boolean"},
+                description="Filter borrowings by active status (True for active, False for inactive)",
+            ),
+            OpenApiParameter(
+                name="user",
                 type={"type": "integer"},
                 description="Filter borrowings by user ID",
             ),
-            OpenApiParameter(
-                name="book_id",
-                type={"type": "integer"},
-                description="Filter borrowings by book ID",
-            ),
-            OpenApiParameter(
-                name="borrow_date",
-                type={"type": "string", "format": "date"},
-                description="Filter borrowings by borrow date (YYYY-MM-DD)",
-            ),
-            OpenApiParameter(
-                name="expected_return_date",
-                type={"type": "string", "format": "date"},
-                description=(
-                    "Filter borrowings by expected"
-                    " return date (YYYY-MM-DD)"
-                ),
-            ),
-            OpenApiParameter(
-                name="actual_return_date",
-                type={"type": "string", "format": "date"},
-                description=(
-                    "Filter borrowings by actual"
-                    " return date (YYYY-MM-DD)",
-                )
-            ),
         ],
-        responses=BorrowingListReadSerializer
+        responses=BorrowingListReadSerializer,
+        description="Get list of borrowings with optional filters by active status and user ID."
     )
     def list(self, request, *args, **kwargs):
         """Get list of borrowings."""
