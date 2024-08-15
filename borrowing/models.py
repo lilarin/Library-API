@@ -15,8 +15,12 @@ class Borrowing(models.Model):
     borrow_date = models.DateField()
     expected_return_date = models.DateField()
     actual_return_date = models.DateField(null=True, blank=True)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    book = models.ForeignKey(
+        Book, on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
     payment = models.OneToOneField(
         Payment,
         on_delete=models.CASCADE,
@@ -58,7 +62,9 @@ class Borrowing(models.Model):
                     self.actual_return_date, "%Y-%m-%d"
                 ).date()
 
-            return_days = (self.actual_return_date - self.expected_return_date).days
+            return_days = (
+                    self.actual_return_date - self.expected_return_date
+            ).days
             if return_days < 1:
                 return_days += 1
 
