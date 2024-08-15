@@ -78,7 +78,6 @@ class Borrowing(models.Model):
             elif self.actual_return_date > self.expected_return_date:
                 # TODO: Can add fine for delay
                 self.payment.payment_type = Payment.Type.FINE
-
                 # TODO explain logic, if we have a Fine,
                 #  user need to pay double payment sum for fine days
                 fine = Decimal(return_days) * (daily_fee_decimal * 2)
@@ -109,8 +108,14 @@ class Borrowing(models.Model):
             cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
         )
 
+        payment_type = Payment.Type.PAYMENT
+        if (self.actual_return_date and self.actual_return_date
+                > self.expected_return_date):
+            payment_type = Payment.Type.FINE
+
         payment = Payment.objects.create(
             money_to_pay=amount_to_pay,
+            payment_type=payment_type,  # Явно задаем тип платежа
             session_id=session.id,
             session_url=session.url,
         )
