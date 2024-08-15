@@ -1,12 +1,6 @@
 # library-API
 The goal of this project is to develop a comprehensive online management system for a library using Django REST Framework (DRF). The system will provide APIs to manage various library operations, including managing books, authors, borrowing activities, and more. The API is designed to be used by front-end applications or other systems to interact with the library's resources.
 
-Features
-Book Management: Create, read, update, and delete information about books, including title, author, cover type, inventory, and daily fee.
-Borrowing System: Manage borrowing and returning of books with validations on availability and user eligibility.
-Search and Filtering: Implement search and filtering functionality for books and authors to provide easy access to specific resources.
-Project Structure
-The project is organized as follows:
 
 Authentication:
     To use the API, you need to create a user account and obtain an JWT token:
@@ -14,11 +8,15 @@ Authentication:
     api/user/ token/verify/
     api/user/ token/refresh/
 
-Features:
-    ·JWT authenticated
-    ·Customized admin panel /admin/
-    ·Payments Service: Handle payments for book borrowings through Stripe.
-    ·Notifications Service: Send notifications about borrowings and overdue items via Telegram.
+Features
+    ·Admin Panel: Customized management interface at /admin/.
+    ·Book Management: Full CRUD operations for books, including title, author, cover type, inventory, and daily fee.
+    ·Borrowing System: Manage borrowing and returning of books with validations on availability and user eligibility.
+    ·Payments Service: Handle book borrowing payments via Stripe.
+    ·Search and Filtering: Easily search and filter books and authors.
+    ·JWT Authentication: Secure API access using JWT tokens.
+    ·Notifications Service: Send alerts about borrowings and overdue items via Telegram.
+    ·Swagger Docs: Interactive API documentation available at /swagger/.
 
 Installation
 Clone the repository:
@@ -33,20 +31,15 @@ Clone the repository:
 Apply migrations:
     python manage.py migrate
 
+To create a superuser for accessing the Django admin panel, use the following command:
+    python manage.py createsuperuser
+
 Run the development server:
     python manage.py runserver
 
 Run with Docker:
-    docker-compose build
-    docker-compose up
+    docker-compose up --build
 
-
-Use accounts for test api library service:
-    Admin Users:
-        Email: admin@mail.com
-        Password: 123
-        Email: user@mail.com
-        Password: 123
 The API can be accessed via http://localhost:8000/api/.
 
 API Endpoints
