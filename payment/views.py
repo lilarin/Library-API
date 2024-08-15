@@ -31,30 +31,8 @@ class PaymentViewSet(
         return self.serializer_class
 
     @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                name="status",
-                type={"type": "string"},
-                enum=["PENDING", "PAID"],
-                description="Filter payments by status (PENDING or PAID)"
-            ),
-            OpenApiParameter(
-                name="payment_type",
-                type={"type": "string"},
-                enum=["PAYMENT", "FINE"],
-                description="Filter payments by type (PAYMENT or FINE)"
-            ),
-            OpenApiParameter(
-                name="money_to_pay",
-                type={"type": "number", "format": "float"},
-                description="Filter payments by amount to pay"
-            ),
-        ],
         responses=PaymentListSerializer,
-        description=(
-            "Get list of payments with optional filters"
-            " by status, payment type, or amount to pay."
-        )
+        description="Get list of all payments."
     )
     def list(self, request, *args, **kwargs):
         """Get list of payments."""
