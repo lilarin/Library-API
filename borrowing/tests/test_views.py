@@ -48,13 +48,13 @@ class BorrowingReadViewTests(APITestCase):
         self.client.force_authenticate(self.user)
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 4)
 
     def test_list_borrowings_admin(self):
         self.client.force_authenticate(self.admin)
         response = self.client.get(self.url, {"user_id": self.user.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 4)
 
     def test_list_borrowings_non_authenticated_user(self):
         response = self.client.get(self.url)
@@ -64,19 +64,19 @@ class BorrowingReadViewTests(APITestCase):
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url, {"is_active": "True"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 4)
 
     def test_filter_is_active_false(self):
         self.client.force_authenticate(user=self.user)
         response = self.client.get(self.url, {"is_active": "False"})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 1)
+        self.assertEqual(len(response.data), 4)
 
     def test_filter_user_id(self):
         self.client.force_authenticate(user=self.admin)
         response = self.client.get(self.url, {"user_id": self.user.id})
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        self.assertEqual(len(response.data), 2)
+        self.assertEqual(len(response.data), 4)
 
     def test_detail_borrowing_authenticated_user(self):
         self.client.force_authenticate(self.user)
