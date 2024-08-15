@@ -96,7 +96,10 @@ class BorrowingViewSet(
             OpenApiParameter(
                 name="is_active",
                 type={"type": "boolean"},
-                description="Filter borrowings by active status (True for active, False for inactive)",
+                description=(
+                        "Filter borrowings by active status "
+                        "(True for active, False for inactive)"
+                ),
             ),
             OpenApiParameter(
                 name="user",
@@ -105,7 +108,10 @@ class BorrowingViewSet(
             ),
         ],
         responses=BorrowingListReadSerializer,
-        description="Get list of borrowings with optional filters by active status and user ID."
+        description=(
+                "Get list of borrowings with optional "
+                "filters by active status and user ID."
+        )
     )
     def list(self, request, *args, **kwargs):
         """Get list of borrowings."""
