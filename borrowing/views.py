@@ -1,3 +1,4 @@
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -53,6 +54,14 @@ class BorrowingViewSet(
         except Exception as e:
             raise ValidationError({"detail": str(e)})
 
+    @extend_schema(
+        request=BorrowingReturnSerializer,
+        responses=BorrowingReturnSerializer,
+        description=(
+            "Mark borrowing as returned "
+            "by setting the actual return date."
+        )
+    )
     @action(
         detail=True,
         methods=["patch"],
@@ -81,3 +90,43 @@ class BorrowingViewSet(
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name="is_active",
+                type={"type": "boolean"},
+                description=(
+                    "Filter borrowings by active status "
+                    "(True for active, False for inactive)"
+                ),
+            ),
+            OpenApiParameter(
+                name="user",
+                type={"type": "integer"},
+                description="Filter borrowings by user ID",
+            ),
+        ],
+        responses=BorrowingListReadSerializer,
+        description=(
+            "Get list of borrowings with optional "
+            "filters by active status and user ID."
+        )
+    )
+    def list(self, request, *args, **kwargs):
+        """Get list of borrowings."""
+        return super().list(request, *args, **kwargs)
+
+    @extend_schema(
+        request=BorrowingCreateSerializer,
+        responses=BorrowingCreateSerializer,
+        description=(
+            "Create a new borrowing record. This involves"
+            " selecting a book and setting the borrow and "
+            "expected return dates. Only authenticated users"
+            " can create borrowings."
+        )
+    )
+    def create(self, request, *args, **kwargs):
+        """Create a new borrowing."""
+        return super().create(request, *args, **kwargs)
