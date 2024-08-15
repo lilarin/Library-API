@@ -1,5 +1,6 @@
 from decimal import Decimal
 
+import stripe
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
@@ -83,11 +84,35 @@ class Borrowing(models.Model):
         return base_payment
 
     def save(self, *args, **kwargs):
+        amount_to_pay = self.calculate_money_to_pay()
+
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+
+        session = stripe.checkout.Session.create(
+            payment_method_types=["card"],
+            line_items=[{
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {
+                        "name": f"Borrowing: {self.book.title}",
+                    },
+                    "unit_amount": int(amount_to_pay * 100),
+                },
+                "quantity": 1,
+            }],
+            mode="payment",
+            success_url="http://127.0.0.1:8000/api/payment/success/",
+            cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
+        )
+
         payment = Payment.objects.create(
-            money_to_pay=self.calculate_money_to_pay(),
-            payment_type=Payment.Type.PAYMENT
+            money_to_pay=amount_to_pay,
+            payment_type=Payment.Type.PAYMENT,
+            session_id=session.id,
+            session_url=session.url,
         )
         self.payment = payment
+
         self.full_clean()
         super().save(*args, **kwargs)
 

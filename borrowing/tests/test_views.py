@@ -114,8 +114,6 @@ class BorrowingCreateViewTest(APITestCase):
         }
 
         response = self.client.post(self.url, data, format="json")
-        print(f"Response status code: {response.status_code}")
-        print(f"Response data: {response.data}")
 
         self.book.refresh_from_db()
 
