@@ -4,30 +4,30 @@ from .models import Book
 
 class BookAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'title',
-        'author',
-        'cover',
-        'inventory',
-        'daily_fee'
+        "id",
+        "title",
+        "author",
+        "cover",
+        "inventory",
+        "daily_fee"
     )
     list_filter = (
-        'cover',
-        'author'
+        "cover",
+        "author"
     )
     search_fields = (
-        'title',
-        'author',
-        'isbn'
+        "title",
+        "author",
+        "isbn"
     )
-    readonly_fields = ('title',)
+    readonly_fields = ("title",)
 
     fieldsets = (
         (None, {
-            'fields': ('title', 'author', 'cover')
+            "fields": ("title", "author", "cover")
         }),
-        ('Inventory and Pricing', {
-            'fields': ('inventory', 'daily_fee')
+        ("Inventory and Pricing", {
+            "fields": ("inventory", "daily_fee")
         }),
     )
 
@@ -38,7 +38,8 @@ class BookAdmin(admin.ModelAdmin):
             f"{updated} book(s) successfully marked as out of stock."
         )
 
-    mark_all_out_of_stock.short_description = "Mark selected books as out of stock"
+    mark_all_out_of_stock.short_description = ("Mark selected books"
+                                               " as out of stock")
 
 
 admin.site.register(Book, BookAdmin)

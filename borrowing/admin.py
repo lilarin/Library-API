@@ -6,41 +6,41 @@ from .models import Borrowing
 
 class BorrowingAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'book',
-        'user',
-        'borrow_date',
-        'expected_return_date',
-        'actual_return_date',
-        'payment'
+        "id",
+        "book",
+        "user",
+        "borrow_date",
+        "expected_return_date",
+        "actual_return_date",
+        "payment"
     )
     list_filter = (
-        'borrow_date',
-        'expected_return_date',
-        'actual_return_date',
-        'book',
-        'user'
+        "borrow_date",
+        "expected_return_date",
+        "actual_return_date",
+        "book",
+        "user"
     )
     search_fields = (
-        'book__title',
-        'user__email',
-        'payment__session_id'
+        "book__title",
+        "user__email",
+        "payment__session_id"
     )
-    readonly_fields = ('payment',)
+    readonly_fields = ("payment",)
 
     fieldsets = (
         (None, {
-            'fields': ('book', 'user')
+            "fields": ("book", "user")
         }),
-        ('Borrowing Dates', {
-            'fields': (
-                'borrow_date',
-                'expected_return_date',
-                'actual_return_date'
+        ("Borrowing Dates", {
+            "fields": (
+                "borrow_date",
+                "expected_return_date",
+                "actual_return_date"
             )
         }),
-        ('Payment Information', {
-            'fields': ('payment',)
+        ("Payment Information", {
+            "fields": ("payment",)
         }),
     )
 

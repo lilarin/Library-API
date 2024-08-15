@@ -4,27 +4,27 @@ from .models import Payment
 
 class PaymentAdmin(admin.ModelAdmin):
     list_display = (
-        'id',
-        'status',
-        'payment_type',
-        'money_to_pay',
-        'session_url',
-        'session_id'
+        "id",
+        "status",
+        "payment_type",
+        "money_to_pay",
+        "session_url",
+        "session_id"
     )
     list_filter = (
-        'status',
-        'payment_type'
+        "status",
+        "payment_type"
     )
-    search_fields = ('session_id',)
-    readonly_fields = ('session_id',)
+    search_fields = ("session_id",)
+    readonly_fields = ("session_id",)
 
     fieldsets = (
         (None, {
-            'fields': ('status', 'payment_type', 'money_to_pay')
+            "fields": ("status", "payment_type", "money_to_pay")
         }),
-        ('Payment Session Details', {
-            'classes': ('collapse',),
-            'fields': ('session_url', 'session_id')
+        ("Payment Session Details", {
+            "classes": ("collapse",),
+            "fields": ("session_url", "session_id")
         }),
     )
 
