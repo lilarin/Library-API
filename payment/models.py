@@ -54,12 +54,13 @@ class Payment(models.Model):
         default=Status.PENDING,
     )
     payment_type = models.CharField(
-        max_length=24,
+        max_length=50,
         choices=Type.choices,
     )
     session_url = models.URLField(
         null=True,
-        blank=True
+        blank=True,
+        max_length=2000
     )
     session_id = models.CharField(
         max_length=255,
