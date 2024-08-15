@@ -56,7 +56,6 @@ class Payment(models.Model):
     payment_type = models.CharField(
         max_length=50,
         choices=Type.choices,
-        default=Type.PAYMENT
     )
     session_url = models.URLField(
         null=True,

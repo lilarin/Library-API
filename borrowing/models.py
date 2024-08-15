@@ -76,15 +76,14 @@ class Borrowing(models.Model):
                     ) * daily_fee_decimal
                 )
             elif self.actual_return_date > self.expected_return_date:
-                # TODO: Can add fine for delay
-                return base_payment + Decimal(
-                    return_days
-                ) * daily_fee_decimal
+                self.payment.payment_type = Payment.Type.FINE
+                # TODO explain logic, if we have a Fine,
+                #  user need to pay double payment sum for fine days
+                fine = Decimal(return_days) * (daily_fee_decimal * 2)
+
+                return base_payment + fine
 
         return base_payment
-
-    def money_for_fine(self):
-        ...
 
     def save(self, *args, **kwargs):
         amount_to_pay = self.calculate_money_to_pay()
@@ -108,9 +107,14 @@ class Borrowing(models.Model):
             cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
         )
 
+        payment_type = Payment.Type.PAYMENT
+        if (self.actual_return_date and self.actual_return_date
+                > self.expected_return_date):
+            payment_type = Payment.Type.FINE
+
         payment = Payment.objects.create(
             money_to_pay=amount_to_pay,
-            payment_type=Payment.Type.PAYMENT,
+            payment_type=payment_type,
             session_id=session.id,
             session_url=session.url,
         )
