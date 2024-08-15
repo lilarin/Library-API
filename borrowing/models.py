@@ -83,6 +83,9 @@ class Borrowing(models.Model):
 
         return base_payment
 
+    def money_for_fine(self):
+        ...
+
     def save(self, *args, **kwargs):
         amount_to_pay = self.calculate_money_to_pay()
 
