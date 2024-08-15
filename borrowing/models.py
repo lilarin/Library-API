@@ -64,7 +64,7 @@ class Borrowing(models.Model):
                 ).date()
 
             return_days = (
-                    self.actual_return_date - self.expected_return_date
+                self.actual_return_date - self.expected_return_date
             ).days
             if return_days < 1:
                 return_days += 1

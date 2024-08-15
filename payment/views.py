@@ -114,8 +114,8 @@ class PaymentViewSet(
         request=PaymentCreateSerializer,
         responses=PaymentCreateSerializer,
         description=(
-                "Create a new payment record."
-                " Only authenticated users can create payments."
+            "Create a new payment record."
+            " Only authenticated users can create payments."
         )
     )
     def create(self, request, *args, **kwargs):
