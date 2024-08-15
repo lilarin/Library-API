@@ -1,5 +1,6 @@
 from drf_spectacular.utils import extend_schema
-from rest_framework import viewsets
+from rest_framework import viewsets, status
+from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 
 from rest_framework.mixins import (
@@ -7,10 +8,13 @@ from rest_framework.mixins import (
     RetrieveModelMixin,
     CreateModelMixin
 )
+from rest_framework.response import Response
+
 from payment.models import Payment
 from payment.serializers import (
     PaymentSerializer, PaymentListSerializer, PaymentCreateSerializer,
 )
+from payment.stripe import get_stripe_session
 
 
 class PaymentViewSet(
@@ -29,6 +33,66 @@ class PaymentViewSet(
         elif self.action == "create":
             return PaymentCreateSerializer
         return self.serializer_class
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="",
+        permission_classes=[IsAuthenticated]
+    )
+    def success(self, request, pk=None):
+        session_id = request.GET.get("session_id")
+
+        if not session_id:
+            return Response(
+                {"error": "Session ID is missing!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        payment = self.queryset.filter(session_id=session_id).first()
+        session = get_stripe_session(session_id)
+
+        if session.payment_status == "paid":
+            payment.status = Payment.Status.PAID
+            payment.save()
+
+            return Response(
+                {"message": "Payment was successful"},
+                status=status.HTTP_200_OK
+            )
+        return Response(
+            {"message": "Payment wasn't successful"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
+
+    @action(
+        detail=False,
+        methods=["get"],
+        url_path="",
+        permission_classes=[IsAuthenticated]
+    )
+    def cancel(self, request, pk=None):
+        session_id = request.GET.get("session_id")
+
+        if not session_id:
+            return Response(
+                {"error": "Session ID is missing!"},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        session = get_stripe_session(session_id)
+
+        if session.payment_status == "unpaid":
+            return Response(
+                {"message": (
+                    "Payment canceled. Session will be "
+                    "available for the next 24 hours"
+                )}, status=status.HTTP_200_OK
+            )
+        return Response(
+            {"message": "Payment wasn't canceled successful"},
+            status=status.HTTP_400_BAD_REQUEST
+        )
 
     @extend_schema(
         responses=PaymentListSerializer,
