@@ -1,69 +1,84 @@
-# library-API
-The goal of this project is to develop a comprehensive online management system for a library using Django REST Framework (DRF). The system will provide APIs to manage various library operations, including managing books, authors, borrowing activities, and more. The API is designed to be used by front-end applications or other systems to interact with the library's resources.
+# Library Management System API
 
+The goal of this project is to develop a comprehensive online management system for a library using Django REST Framework (DRF). The system provides APIs to manage various library operations, including managing books, authors, borrowing activities, and more. The API is designed to be used by front-end applications or other systems to interact with the library's resources.
 
-Authentication:
-    To use the API, you need to create a user account and obtain an JWT token:
-    api/user/register/
-    api/user/ token/verify/
-    api/user/ token/refresh/
+## Authentication
 
-Features
-    ·Admin Panel: Customized management interface at /admin/.
-    ·Book Management: Full CRUD operations for books, including title, author, cover type, inventory, and daily fee.
-    ·Borrowing System: Manage borrowing and returning of books with validations on availability and user eligibility.
-    ·Payments Service: Handle book borrowing payments via Stripe.
-    ·Search and Filtering: Easily search and filter books and authors.
-    ·JWT Authentication: Secure API access using JWT tokens.
-    ·Notifications Service: Send alerts about borrowings and overdue items via Telegram.
-    ·Swagger Docs: Interactive API documentation available at /swagger/.
+To use the API, you need to create a user account and obtain a JWT token:
 
-Installation
-Clone the repository:
+- **Register**: `POST /api/user/register/`
+- **Verify Token**: `POST /api/user/token/verify/`
+- **Refresh Token**: `POST /api/user/token/refresh/`
+
+## Features
+
+- **Admin Panel**: Customized management interface at `/admin/`.
+- **Book Management**: Full CRUD operations for books, including title, author, cover type, inventory, and daily fee.
+- **Borrowing System**: Manage borrowing and returning of books with validations on availability and user eligibility.
+- **Payments Service**: Handle book borrowing payments via Stripe.
+- **Search and Filtering**: Easily search and filter books and authors.
+- **JWT Authentication**: Secure API access using JWT tokens.
+- **Notifications Service**: Send alerts about borrowings and overdue items via Telegram.
+- **Swagger Docs**: Interactive API documentation available at `/swagger/`.
+
+## Installation
+
+1. **Clone the repository**:
+    ```bash
     git clone https://github.com/lilarin/library-API.git
     cd library-API
-    Create a virtual environment:
+    ```
+2. **Create a virtual environment**:
+    ```bash
     python -m venv env
     source env/bin/activate
-    Install dependencies:
+    ```
+3. **Install dependencies**:
+    ```bash
     pip install -r requirements.txt
-
-Apply migrations:
+    ```
+4. **Apply migrations**:
+    ```bash
     python manage.py migrate
-
-To create a superuser for accessing the Django admin panel, use the following command:
+    ```
+5. **Create a superuser**:
+    ```bash
     python manage.py createsuperuser
-
-Run the development server:
+    ```
+6. **Run the development server**:
+    ```bash
     python manage.py runserver
-    **Note: Running the development server this way will not start Celery**
+    ```
+    > **Note**: Running the development server this way will not start Celery.
 
-Run with Docker:
+7. **Run with Docker**:
+    ```bash
     docker-compose up --build
+    ```
 
-The API can be accessed via http://localhost:8000/api/.
+## API Endpoints
 
-API Endpoints
-·Admin:
-    ·/admin/
-·Books:
-    ·/api/book/
-    ·/api/book/<id>/
-·Users:
-    ·/api/user/
-    ·/api/user/me/
-·Borrowings:
-    ·/api/borrowing/
-    ·/api/borrowing/<id>/
-·Payment:
-    ·/api/payment/
-    ·/api/payment/<id>/
+- **Admin**:
+  - `/admin/`
+- **Books**:
+  - `/api/book/`
+  - `/api/book/<id>/`
+- **Users**:
+  - `/api/user/`
+  - `/api/user/me/`
+- **Borrowings**:
+  - `/api/borrowing/`
+  - `/api/borrowing/<id>/`
+- **Payments**:
+  - `/api/payment/`
+  - `/api/payment/<id>/`
 
-Project Team
-Team Leader: Pavlo Krakovych
-Developers:
-    ·Vladyslav Chichkan
-    ·Stanislav Sudakov
-    ·Bohdan Kuzik
-    ·Bohdan Zinchenko
-    ·Nykyta Nykolaitsev
+## Project Team
+
+- **Team Leader**: Pavlo Krakovych
+- **Developers**:
+  - Vladyslav Chichkan ·
+  - Stanislav Sudakov ·
+  - Bohdan Kuzik ·
+  - Bohdan Zinchenko ·
+  - Nykyta Nykolaitsev
