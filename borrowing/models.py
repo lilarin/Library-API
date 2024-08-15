@@ -9,6 +9,7 @@ from django.utils.translation import gettext_lazy as _
 from book.models import Book
 from library_service import settings
 from payment.models import Payment
+from payment.stripe import create_stripe_session
 
 
 class Borrowing(models.Model):
@@ -63,7 +64,7 @@ class Borrowing(models.Model):
                 ).date()
 
             return_days = (
-                self.actual_return_date - self.expected_return_date
+                    self.actual_return_date - self.expected_return_date
             ).days
             if return_days < 1:
                 return_days += 1
@@ -90,23 +91,9 @@ class Borrowing(models.Model):
 
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
-        session = stripe.checkout.Session.create(
-            payment_method_types=["card"],
-            line_items=[{
-                "price_data": {
-                    "currency": "usd",
-                    "product_data": {
-                        "name": f"Borrowing: {self.book.title}",
-                    },
-                    "unit_amount": int(amount_to_pay * 100),
-                },
-                "quantity": 1,
-            }],
-            mode="payment",
-            success_url="http://127.0.0.1:8000/api/payment/success/",
-            cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
-        )
+        session = create_stripe_session(self.book.title, amount_to_pay)
 
+        payment_status = Payment.Status.PENDING
         payment_type = Payment.Type.PAYMENT
         if (self.actual_return_date and self.actual_return_date
                 > self.expected_return_date):
@@ -114,6 +101,7 @@ class Borrowing(models.Model):
 
         payment = Payment.objects.create(
             money_to_pay=amount_to_pay,
+            status=payment_status,
             payment_type=payment_type,
             session_id=session.id,
             session_url=session.url,
