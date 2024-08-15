@@ -1,4 +1,3 @@
-import uuid
 from django.db import models
 
 
@@ -21,10 +20,6 @@ class Payment(models.Model):
         - Payment: Indicates that the payment is for renting a book.
         - Fine: Indicates that the payment is a fine for
          returning a book after the "Actual return date".
-
-    - borrowing: A ForeignKey linking this
-      payment to a specific borrowing record in the system.
-      This connects the payment to the corresponding book rental.
 
     - session_url: The URL where the payment will be processed.
       This is typically a link to the payment page
@@ -49,18 +44,17 @@ class Payment(models.Model):
         FINE = "FINE", "Fine"
 
     status = models.CharField(
-        max_length=24,
-        choices=Status.choices,
-        default=Status.PENDING,
+        max_length=7,
+        choices=Status.choices
     )
     payment_type = models.CharField(
-        max_length=50,
-        choices=Type.choices,
+        max_length=7,
+        choices=Type.choices
     )
     session_url = models.URLField(
         null=True,
         blank=True,
-        max_length=2000
+        max_length=255
     )
     session_id = models.CharField(
         max_length=255,
@@ -72,16 +66,11 @@ class Payment(models.Model):
 
     def __str__(self):
         return (
-            f"Status: {self.status}"
-            f"Type: {self.payment_type}"
-            f"Status: {self.status}"
-            f"Money to pay - {self.money_to_pay}"
+            f"Status: {self.status}\n"
+            f"Type: {self.payment_type}\n"
+            f"Session id: {self.session_id}\n"
+            f"Sum: {self.money_to_pay}$"
         )
 
     class Meta:
         ordering = ["-status"]
-    #
-    # def save(self, *args, **kwargs):
-    #     base_url = "https://payment-provider.com/session/"
-    #     self.session_url = f"{base_url}{self.session_id}"
-    #     super().save(*args, **kwargs)

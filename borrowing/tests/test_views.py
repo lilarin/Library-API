@@ -139,7 +139,9 @@ class BorrowingCreateViewTest(APITestCase):
 
 class BorrowingReturnTests(APITestCase):
     def setUp(self):
-        self.user = User.objects.create_user(email="user@example.com", password="password123")
+        self.user = User.objects.create_user(
+            email="user@example.com",
+            password="password123")
         self.book = Book.objects.create(
             title="Test Book",
             author="Author",
