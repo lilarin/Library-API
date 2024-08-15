@@ -52,7 +52,7 @@ REST_FRAMEWORK = {
         "rest_framework_simplejwt.authentication.JWTAuthentication"
     ],
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
-    "PAGE_SIZE": 2
+    "PAGE_SIZE": 2,
 }
 
 SPECTACULAR_SETTINGS = {
@@ -60,6 +60,12 @@ SPECTACULAR_SETTINGS = {
     "DESCRIPTION": "API for working with books, borrowings and payments with telegram notifications",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
+    "SWAGGER_UI_SETTINGS": {
+        "deepLinking": True,
+        "defaultModelRendering": "model",
+        "defaultModelsExpandDepth": 2,
+        "defaultModelExpandDepth": 2,
+    },
 }
 
 MIDDLEWARE = [
