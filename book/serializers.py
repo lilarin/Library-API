@@ -7,6 +7,7 @@ class BookSerializer(serializers.ModelSerializer):
         inventory = attrs.get("inventory")
         daily_fee = attrs.get("daily_fee")
         title = attrs.get("title")
+        author = attrs.get("author")
 
         if inventory is not None and inventory < 1:
             raise serializers.ValidationError(
@@ -18,9 +19,14 @@ class BookSerializer(serializers.ModelSerializer):
                 {"daily_fee": "Daily fee must be at least 0.09."}
             )
 
-        if title is None:
+        if title is None or len(title) < 3 or title.isdigit():
             raise serializers.ValidationError(
-                {"title": "Title cannot be empty."}
+                {"title": "Send correct title."}
+            )
+
+        if author.isdigit():
+            raise serializers.ValidationError(
+                {"author": "Send correct name."}
             )
 
         return attrs
