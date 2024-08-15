@@ -62,9 +62,9 @@ class Payment(models.Model):
         null=True,
         blank=True
     )
-    session_id = models.UUIDField(
-        default=uuid.uuid4,
-        editable=False,
+    session_id = models.CharField(
+        max_length=255,
+        unique=True
     )
     money_to_pay = models.DecimalField(
         max_digits=12, decimal_places=2
@@ -80,8 +80,8 @@ class Payment(models.Model):
 
     class Meta:
         ordering = ["-status"]
-
-    def save(self, *args, **kwargs):
-        base_url = "https://payment-provider.com/session/"
-        self.session_url = f"{base_url}{self.session_id}"
-        super().save(*args, **kwargs)
+    #
+    # def save(self, *args, **kwargs):
+    #     base_url = "https://payment-provider.com/session/"
+    #     self.session_url = f"{base_url}{self.session_id}"
+    #     super().save(*args, **kwargs)
