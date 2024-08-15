@@ -24,7 +24,7 @@ class BookSerializer(serializers.ModelSerializer):
                 {"title": "Send correct title."}
             )
 
-        if author.isdigit():
+        if author.isdigit() or len(author) < 3 or len(author) > 255:
             raise serializers.ValidationError(
                 {"author": "Send correct name."}
             )
