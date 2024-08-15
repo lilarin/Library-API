@@ -36,6 +36,7 @@ To create a superuser for accessing the Django admin panel, use the following co
 
 Run the development server:
     python manage.py runserver
+    **Note: Running the development server this way will not start Celery**
 
 Run with Docker:
     docker-compose up --build
