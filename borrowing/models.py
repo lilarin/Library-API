@@ -28,14 +28,14 @@ class Borrowing(models.Model):
 
     def clean(self):
         if self.expected_return_date < self.borrow_date:
-            raise ValidationError(
-                _("Expected return date cannot be earlier than borrow date.")
-            )
+            raise ValidationError(_(
+                "Expected return date cannot be earlier than borrow date."
+            ))
         if self.actual_return_date:
             if self.actual_return_date < self.borrow_date:
-                raise ValidationError(
-                    _("Actual return date cannot be earlier than borrow date.")
-                )
+                raise ValidationError(_(
+                    "Actual return date cannot be earlier than borrow date."
+                ))
 
     def calculate_money_to_pay(self):
         if isinstance(self.expected_return_date, str):
@@ -63,7 +63,7 @@ class Borrowing(models.Model):
                 ).date()
 
             return_days = (
-                    self.actual_return_date - self.expected_return_date
+                self.actual_return_date - self.expected_return_date
             ).days
             if return_days < 1:
                 return_days += 1
@@ -71,11 +71,15 @@ class Borrowing(models.Model):
             if self.actual_return_date < self.expected_return_date:
                 return max(
                     Decimal(0),
-                    base_payment - Decimal(abs(return_days)) * daily_fee_decimal,
+                    base_payment - Decimal(
+                        abs(return_days)
+                    ) * daily_fee_decimal
                 )
             elif self.actual_return_date > self.expected_return_date:
                 # TODO: Can add fine for delay
-                return base_payment + Decimal(return_days) * daily_fee_decimal
+                return base_payment + Decimal(
+                    return_days
+                ) * daily_fee_decimal
 
         return base_payment
 
@@ -86,18 +90,16 @@ class Borrowing(models.Model):
 
         session = stripe.checkout.Session.create(
             payment_method_types=["card"],
-            line_items=[
-                {
-                    "price_data": {
-                        "currency": "usd",
-                        "product_data": {
-                            "name": f"Borrowing: {self.book.title}",
-                        },
-                        "unit_amount": int(amount_to_pay * 100),
+            line_items=[{
+                "price_data": {
+                    "currency": "usd",
+                    "product_data": {
+                        "name": f"Borrowing: {self.book.title}",
                     },
-                    "quantity": 1,
-                }
-            ],
+                    "unit_amount": int(amount_to_pay * 100),
+                },
+                "quantity": 1,
+            }],
             mode="payment",
             success_url="http://127.0.0.1:8000/api/payment/success/",
             cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
