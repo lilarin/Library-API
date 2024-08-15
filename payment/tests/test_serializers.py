@@ -1,10 +1,6 @@
 from django.test import TestCase
 from payment.models import Payment
 from payment.serializers import PaymentSerializer
-from borrowing.models import Borrowing
-from book.models import Book
-from user.models import User
-from django.utils import timezone
 
 
 class PaymentSerializerTests(TestCase):

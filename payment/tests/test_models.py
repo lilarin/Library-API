@@ -1,9 +1,5 @@
 from django.test import TestCase
-from django.utils import timezone
 from payment.models import Payment
-from borrowing.models import Borrowing
-from book.models import Book
-from user.models import User
 
 
 class PaymentModelTests(TestCase):
