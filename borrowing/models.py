@@ -93,8 +93,8 @@ class Borrowing(models.Model):
                 }
             ],
             mode="payment",
-            success_url="https://api/payment/success/",
-            cancel_url="https://api/payment/cancel/",
+            success_url="http://127.0.0.1:8000/api/payment/success/",
+            cancel_url="http://127.0.0.1:8000/api/payment/cancel/",
         )
 
         payment = Payment.objects.create(
