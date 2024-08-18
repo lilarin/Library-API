@@ -1,4 +1,3 @@
-from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -9,6 +8,7 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from borrowing.filters import BorrowingFilter
 from borrowing.models import Borrowing
@@ -18,7 +18,6 @@ from borrowing.serializers import (
     BorrowingCreateSerializer,
     BorrowingReturnSerializer
 )
-from payment.models import Payment
 
 
 class BorrowingViewSet(
@@ -66,7 +65,6 @@ class BorrowingViewSet(
         detail=True,
         methods=["patch"],
         url_path="return",
-        permission_classes=[IsAuthenticated]
     )
     def return_borrowing(self, request, pk=None):
         borrowing = self.get_object()
@@ -78,18 +76,6 @@ class BorrowingViewSet(
         )
 
         serializer.is_valid(raise_exception=True)
-
-        if request.data.get(
-                "actual_return_date") and borrowing.expected_return_date:
-            actual_return_date = serializer.validated_data.get(
-                "actual_return_date")
-            if actual_return_date > borrowing.expected_return_date:
-                borrowing.payment.payment_type = Payment.Type.FINE
-                borrowing.payment.status = Payment.Status.PENDING
-
-        borrowing.payment.save(update_fields=[
-            "payment_type", "status"
-        ])
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)

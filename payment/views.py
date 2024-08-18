@@ -1,4 +1,3 @@
-from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -8,6 +7,7 @@ from rest_framework.mixins import (
     CreateModelMixin
 )
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema
 
 from payment.models import Payment
 from payment.serializers import (
@@ -38,8 +38,7 @@ class PaymentViewSet(
     @action(
         detail=False,
         methods=["get"],
-        url_path="",
-        permission_classes=[IsAuthenticated]
+        url_path="success",
     )
     def success(self, request, pk=None):
         session_id = request.GET.get("session_id")
@@ -72,8 +71,7 @@ class PaymentViewSet(
     @action(
         detail=False,
         methods=["get"],
-        url_path="",
-        permission_classes=[IsAuthenticated]
+        url_path="cancel",
     )
     def cancel(self, request, pk=None):
         session_id = request.GET.get("session_id")

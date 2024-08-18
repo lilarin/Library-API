@@ -67,20 +67,20 @@ class BorrowingRetrieveReadSerializer(serializers.ModelSerializer):
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
+
+    def validate_book(self, value):
+        if value.inventory < 1:
+            raise serializers.ValidationError(
+                "This book is not available for borrowing."
+            )
+        return value
+
     def validate(self, attrs):
-        book = attrs.get("book")
         borrow_date = attrs.get("borrow_date")
         expected_return_date = attrs.get("expected_return_date")
 
-        if book.inventory < 1:
-            raise serializers.ValidationError(
-                {"book": "This book is not available for borrowing."}
-            )
-
-        if (
-            expected_return_date and borrow_date
-            and expected_return_date < borrow_date
-        ):
+        if (expected_return_date and borrow_date and expected_return_date
+                < borrow_date):
             raise serializers.ValidationError(
                 {
                     "expected_return_date": (
@@ -139,9 +139,23 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
-        instance.actual_return_date = validated_data.get(
-            "actual_return_date", None
-        )
+        actual_return_date = validated_data.get("actual_return_date", None)
+        instance.actual_return_date = actual_return_date
+
+        if (
+                actual_return_date
+                and instance.expected_return_date
+                and actual_return_date > instance.expected_return_date
+        ):
+
+            if instance.payment:
+                instance.payment.payment_type = Payment.Type.FINE
+                instance.payment.status = Payment.Status.PENDING
+                instance.payment.save(update_fields=["payment_type", "status"])
+            else:
+                raise serializers.ValidationError(
+                    "Payment information is missing."
+                )
 
         book = instance.book
         book.inventory += 1
