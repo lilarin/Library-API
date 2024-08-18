@@ -24,35 +24,34 @@ To use the API, you need to create a user account and obtain a JWT token:
 ## Installation
 
 1. **Clone the repository**:
-    ```bash
+    ```
     git clone https://github.com/lilarin/library-API.git
-    cd library-API
     ```
 2. **Create a virtual environment**:
-    ```bash
+    ```
     python -m venv env
     source env/bin/activate
     ```
 3. **Install dependencies**:
-    ```bash
+    ```
     pip install -r requirements.txt
     ```
 4. **Apply migrations**:
-    ```bash
+    ```
     python manage.py migrate
     ```
 5. **Create a superuser**:
-    ```bash
+    ```
     python manage.py createsuperuser
     ```
 6. **Run the development server**:
-    ```bash
+    ```
     python manage.py runserver
     ```
     > **Note**: Running the development server this way will not start Celery.
 
 7. **Run with Docker**:
-    ```bash
+    ```
     docker-compose up --build
     ```
 
@@ -77,8 +76,8 @@ To use the API, you need to create a user account and obtain a JWT token:
 
 - **Team Leader**: Pavlo Krakovych
 - **Developers**:
-  - Vladyslav Chichkan ·
-  - Stanislav Sudakov ·
-  - Bohdan Kuzik ·
-  - Bohdan Zinchenko ·
+  - Vladyslav Chichkan
+  - Stanislav Sudakov
+  - Bohdan Kuzik
+  - Bohdan Zinchenko
   - Nykyta Nykolaitsev
