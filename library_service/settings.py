@@ -138,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_BROKER_URL")
+CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_BROKER_URL", "redis://redis:6379/0")
 CELERY_BEAT_SCHEDULE = {
     "send-active-borrowings-notification-every-day": {
         "task": "notification.tasks.send_active_borrowings_to_chat",
