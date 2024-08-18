@@ -20,7 +20,6 @@ class BookAdmin(admin.ModelAdmin):
         "author",
         "isbn"
     )
-    readonly_fields = ("title",)
 
     fieldsets = (
         (None, {

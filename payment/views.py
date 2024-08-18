@@ -53,6 +53,9 @@ class PaymentViewSet(
         payment = self.queryset.filter(session_id=session_id).first()
         session = get_stripe_session(session_id)
 
+        if isinstance(session, Response):
+            return Response(session.data, status=session.status_code)
+
         if session.payment_status == "paid":
             payment.status = Payment.Status.PAID
             payment.save()

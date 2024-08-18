@@ -17,3 +17,8 @@ def send_active_borrowings_to_chat():
         message = "There are no active borrowings."
 
     send_message(message)
+
+
+@shared_task
+def send_log(message):
+    send_message(message)
