@@ -81,3 +81,7 @@ To use the API, you need to create a user account and obtain a JWT token:
   - Bohdan Kuzik
   - Bohdan Zinchenko
   - Nykyta Nykolaitsev
+
+## Environment Variables
+
+This project uses environment variables to manage sensitive settings like API keys, database configurations, and more. Ensure you create a `.env.sample` file in the root directory and set the required environment variables before running the project.
