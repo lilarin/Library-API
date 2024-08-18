@@ -64,7 +64,7 @@ To use the API, you need to create a user account and obtain a JWT token:
   - `/api/book/<id>/`
 - **Users**:
   - `/api/user/`
-  - `/api/user/me/`
+  - `/api/user/my-profile/`
 - **Borrowings**:
   - `/api/borrowing/`
   - `/api/borrowing/<id>/`
