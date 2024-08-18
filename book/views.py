@@ -1,13 +1,13 @@
-from drf_spectacular.utils import (
-    extend_schema,
-    OpenApiParameter
-)
 from rest_framework import viewsets
 from rest_framework.mixins import (
     ListModelMixin,
     CreateModelMixin,
     UpdateModelMixin,
     DestroyModelMixin
+)
+from drf_spectacular.utils import (
+    extend_schema,
+    OpenApiParameter
 )
 
 from book.filters import BookFilter

@@ -1,4 +1,3 @@
-from drf_spectacular.utils import extend_schema, OpenApiParameter
 from rest_framework import viewsets, status
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError
@@ -9,6 +8,7 @@ from rest_framework.mixins import (
 )
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
+from drf_spectacular.utils import extend_schema, OpenApiParameter
 
 from borrowing.filters import BorrowingFilter
 from borrowing.models import Borrowing
@@ -18,7 +18,6 @@ from borrowing.serializers import (
     BorrowingCreateSerializer,
     BorrowingReturnSerializer
 )
-from payment.models import Payment
 
 
 class BorrowingViewSet(
