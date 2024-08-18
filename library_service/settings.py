@@ -104,7 +104,7 @@ WSGI_APPLICATION = "library_service.wsgi.application"
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 
-if os.environ.get("DJANGO_SECRET_KEY"):
+if os.environ.get("POSTGRES_HOST"):
     DATABASES = {
         "default": {
             "ENGINE": "django.db.backends.postgresql",
@@ -138,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_BROKER_URL", "redis://redis:6379/0")
+CELERY_BROKER_URL = os.environ.get("CELERY_REDIS_BROKER_URL")
 CELERY_BEAT_SCHEDULE = {
     "send-active-borrowings-notification-every-day": {
         "task": "notification.tasks.send_active_borrowings_to_chat",
