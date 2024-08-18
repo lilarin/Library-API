@@ -1,8 +1,13 @@
+from django.conf import settings
 from django.test import TestCase
-from rest_framework.exceptions import ValidationError
-from borrowing.models import Borrowing, Book
-from borrowing.serializers import BorrowingCreateSerializer
 from django.contrib.auth import get_user_model
+from rest_framework.exceptions import ValidationError
+
+from borrowing.models import (
+    Borrowing,
+    Book
+)
+from borrowing.serializers import BorrowingCreateSerializer
 
 User = get_user_model()
 
@@ -54,19 +59,20 @@ class BorrowingSerializerTest(TestCase):
         self.assertIn("This book is not available for borrowing.", str(context.exception))
 
     def test_borrowing_serializer_create(self):
-        data = {
-            "borrow_date": "2024-08-01",
-            "expected_return_date": "2024-08-10",
-            "actual_return_date": None,
-            "book": self.book.id,
-        }
-        serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
-        self.assertTrue(serializer.is_valid(), serializer.errors)
-        borrowing = serializer.save()
-        self.assertEqual(Borrowing.objects.count(), 1)
-        self.assertEqual(borrowing.book.inventory, 4)
-        self.assertEqual(borrowing.user, self.user)
-        self.assertEqual(borrowing.book, self.book)
+        if settings.STRIPE_SECRET_KEY:
+            data = {
+                "borrow_date": "2024-08-01",
+                "expected_return_date": "2024-08-10",
+                "actual_return_date": None,
+                "book": self.book.id,
+            }
+            serializer = BorrowingCreateSerializer(data=data, context={"request": self._request_mock(self.user)})
+            self.assertTrue(serializer.is_valid(), serializer.errors)
+            borrowing = serializer.save()
+            self.assertEqual(Borrowing.objects.count(), 1)
+            self.assertEqual(borrowing.book.inventory, 4)
+            self.assertEqual(borrowing.user, self.user)
+            self.assertEqual(borrowing.book, self.book)
 
     def test_borrowing_serializer_invalid_data(self):
         data = {

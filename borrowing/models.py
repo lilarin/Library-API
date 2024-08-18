@@ -5,6 +5,7 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from rest_framework.response import Response
 
 from book.models import Book
 from library_service import settings
@@ -90,6 +91,9 @@ class Borrowing(models.Model):
         stripe.api_key = settings.STRIPE_SECRET_KEY
 
         session = create_stripe_session(self.book.title, amount_to_pay)
+
+        if isinstance(session, Response):
+            return Response(session.data, status=session.status_code)
 
         payment_status = Payment.Status.PENDING
         payment_type = Payment.Type.PAYMENT
