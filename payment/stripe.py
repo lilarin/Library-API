@@ -1,5 +1,8 @@
-import stripe
 from django.conf import settings
+
+import stripe
+from rest_framework.response import Response
+from stripe import StripeError
 
 stripe.api_key = settings.STRIPE_SECRET_KEY
 
@@ -26,6 +29,11 @@ def create_stripe_session(title, amount):
 
 
 def get_stripe_session(session_id):
-    return stripe.checkout.Session.retrieve(
-        session_id
-    )
+    try:
+        session = stripe.checkout.Session.retrieve(session_id)
+        return session
+    except StripeError as error:
+        return Response(
+            {"error": f"Failed to retrieve Stripe session: {error}"},
+            status=400
+        )

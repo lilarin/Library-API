@@ -5,4 +5,5 @@ class NotificationConfig(AppConfig):
     name = "notification"
 
     def ready(self):
-        import notification.signals
+        from .signals import register_signals
+        register_signals()

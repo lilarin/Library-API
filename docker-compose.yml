@@ -41,6 +41,7 @@ services:
     command: celery -A library_service worker --loglevel=info
     depends_on:
       - redis
+    restart: always
 
   celery-beat:
     build:
@@ -52,6 +53,7 @@ services:
     command: celery -A library_service beat --loglevel=info
     depends_on:
       - redis
+    restart: always
 
 volumes:
   library_db_volume:
