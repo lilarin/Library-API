@@ -67,20 +67,17 @@ class BorrowingRetrieveReadSerializer(serializers.ModelSerializer):
 
 
 class BorrowingCreateSerializer(serializers.ModelSerializer):
+
+    def validate_book(self, value):
+        if value.inventory < 1:
+            raise serializers.ValidationError("This book is not available for borrowing.")
+        return value
+
     def validate(self, attrs):
-        book = attrs.get("book")
         borrow_date = attrs.get("borrow_date")
         expected_return_date = attrs.get("expected_return_date")
 
-        if book.inventory < 1:
-            raise serializers.ValidationError(
-                {"book": "This book is not available for borrowing."}
-            )
-
-        if (
-            expected_return_date and borrow_date
-            and expected_return_date < borrow_date
-        ):
+        if expected_return_date and borrow_date and expected_return_date < borrow_date:
             raise serializers.ValidationError(
                 {
                     "expected_return_date": (
