@@ -139,9 +139,16 @@ class BorrowingReturnSerializer(serializers.ModelSerializer):
         return attrs
 
     def update(self, instance, validated_data):
-        instance.actual_return_date = validated_data.get(
-            "actual_return_date", None
-        )
+        actual_return_date = validated_data.get("actual_return_date", None)
+        instance.actual_return_date = actual_return_date
+
+        if actual_return_date and instance.expected_return_date and actual_return_date > instance.expected_return_date:
+            if instance.payment:
+                instance.payment.payment_type = Payment.Type.FINE
+                instance.payment.status = Payment.Status.PENDING
+                instance.payment.save(update_fields=["payment_type", "status"])
+            else:
+                raise serializers.ValidationError("Payment information is missing.")
 
         book = instance.book
         book.inventory += 1

@@ -78,18 +78,6 @@ class BorrowingViewSet(
         )
 
         serializer.is_valid(raise_exception=True)
-
-        if request.data.get(
-                "actual_return_date") and borrowing.expected_return_date:
-            actual_return_date = serializer.validated_data.get(
-                "actual_return_date")
-            if actual_return_date > borrowing.expected_return_date:
-                borrowing.payment.payment_type = Payment.Type.FINE
-                borrowing.payment.status = Payment.Status.PENDING
-
-        borrowing.payment.save(update_fields=[
-            "payment_type", "status"
-        ])
         serializer.save()
 
         return Response(serializer.data, status=status.HTTP_200_OK)
