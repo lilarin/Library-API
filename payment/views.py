@@ -39,7 +39,6 @@ class PaymentViewSet(
         detail=False,
         methods=["get"],
         url_path="success",
-        permission_classes=[IsAuthenticated]
     )
     def success(self, request, pk=None):
         session_id = request.GET.get("session_id")
@@ -70,7 +69,6 @@ class PaymentViewSet(
         detail=False,
         methods=["get"],
         url_path="cancel",
-        permission_classes=[IsAuthenticated]
     )
     def cancel(self, request, pk=None):
         session_id = request.GET.get("session_id")

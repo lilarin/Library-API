@@ -65,7 +65,6 @@ class BorrowingViewSet(
         detail=True,
         methods=["patch"],
         url_path="return",
-        permission_classes=[IsAuthenticated]
     )
     def return_borrowing(self, request, pk=None):
         borrowing = self.get_object()
