@@ -3,33 +3,25 @@ from book.models import Book
 
 
 class BookSerializer(serializers.ModelSerializer):
-    def validate(self, attrs):
-        inventory = attrs.get("inventory")
-        daily_fee = attrs.get("daily_fee")
-        title = attrs.get("title")
-        author = attrs.get("author")
+    def validate_inventory(self, value):
+        if value < 1:
+            raise serializers.ValidationError("Inventory must be at least 1.")
+        return value
 
-        if inventory is not None and inventory < 1:
-            raise serializers.ValidationError(
-                {"inventory": "Inventory must be at least 1."}
-            )
+    def validate_daily_fee(self, value):
+        if value < 0.09:
+            raise serializers.ValidationError("Daily fee must be at least 0.09.")
+        return value
 
-        if daily_fee is not None and daily_fee < 0.09:
-            raise serializers.ValidationError(
-                {"daily_fee": "Daily fee must be at least 0.09."}
-            )
+    def validate_title(self, value):
+        if len(value) < 3 or value.isdigit():
+            raise serializers.ValidationError("Send correct title.")
+        return value
 
-        if title is None or len(title) < 3 or title.isdigit():
-            raise serializers.ValidationError(
-                {"title": "Send correct title."}
-            )
-
-        if author.isdigit() or len(author) < 3 or len(author) > 255:
-            raise serializers.ValidationError(
-                {"author": "Send correct name."}
-            )
-
-        return attrs
+    def validate_author(self, value):
+        if value.isdigit() or len(value) < 3 or len(value) > 255:
+            raise serializers.ValidationError("Send correct name.")
+        return value
 
     class Meta:
         model = Book
