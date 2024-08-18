@@ -86,6 +86,9 @@ class PaymentViewSet(
 
         session = get_stripe_session(session_id)
 
+        if isinstance(session, Response):
+            return Response(session.data, status=session.status_code)
+
         if session.payment_status == "unpaid":
             return Response(
                 {"message": (

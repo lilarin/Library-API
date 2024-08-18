@@ -10,10 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "DEBUG")
 
-STRIPE_SECRET_KEY = os.environ.get(
-    "STRIPE_SECRET_KEY",
-    "sk_test_51Pnx1q2M45a8trwPWgIJPYLY0rxI8O4U1eodVBNhH5Wh6LdsPPwuQwrbh79YkJQxNZl7H2MfYpfKzNwjmTyhAx4B009Jy8Vkjm"
-)
+STRIPE_SECRET_KEY = os.environ.get("STRIPE_SECRET_KEY")
 STRIPE_PUBLISHABLE_KEY = os.environ.get("STRIPE_PUBLISHABLE_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
