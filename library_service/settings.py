@@ -28,16 +28,18 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
     "django_filters",
     "debug_toolbar",
     "drf_spectacular",
     "rest_framework",
+    "rest_framework_simplejwt",
+
     "book",
     "borrowing",
     "payment",
     "user",
     "notification",
-    "rest_framework_simplejwt",
 ]
 
 INTERNAL_IPS = [
