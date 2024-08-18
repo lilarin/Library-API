@@ -38,7 +38,7 @@ class PaymentViewSet(
     @action(
         detail=False,
         methods=["get"],
-        url_path="",
+        url_path="success",
         permission_classes=[IsAuthenticated]
     )
     def success(self, request, pk=None):
@@ -69,7 +69,7 @@ class PaymentViewSet(
     @action(
         detail=False,
         methods=["get"],
-        url_path="",
+        url_path="cancel",
         permission_classes=[IsAuthenticated]
     )
     def cancel(self, request, pk=None):
