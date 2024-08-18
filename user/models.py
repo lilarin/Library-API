@@ -1,12 +1,11 @@
 from django.contrib.auth.models import (
-    AbstractUser,
-    UserManager as DjangoUserManager,
+    AbstractBaseUser, BaseUserManager, PermissionsMixin
 )
 from django.db import models
 from django.utils.translation import gettext as _
 
 
-class UserManager(DjangoUserManager):
+class UserManager(BaseUserManager):
     use_in_migrations = True
 
     def _create_user(self, email, password, **extra_fields):
@@ -35,12 +34,19 @@ class UserManager(DjangoUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-class User(AbstractUser):
-
-    username = None
+class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(_("email address"), unique=True)
+    first_name = models.CharField(max_length=30, blank=True)
+    last_name = models.CharField(max_length=30, blank=True)
+    is_staff = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    is_superuser = models.BooleanField(default=False)
+    date_joined = models.DateTimeField(auto_now_add=True)
 
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = []
 
     objects = UserManager()
+
+    def __str__(self):
+        return self.email
